@@ -10,17 +10,7 @@ import Foundation
 final class Service {
     
     func getCharacters() async throws -> [Char] {
-        guard let url = URL(string: "https://rickandmortyapi.com/api/character") else {
-            throw URLError(.badURL)
-        }
-        
-        let (data, response) = try await URLSession.shared.data(from: url)
-        
-        if let httpResponse = response as? HTTPURLResponse {
-            print("DEBUG: Statucode.. \(httpResponse.statusCode)")
-        }
-        
-        let charResponse = try JSONDecoder().decode(CharResponse.self, from: data)
+        let charResponse = try await request(url: "https://rickandmortyapi.com/api/character", type: CharResponse.self)
         
         let characters = charResponse.results.map { chars in
             Char(
@@ -39,5 +29,20 @@ final class Service {
             )
         }
         return characters
+    }
+    
+    func request<T: Codable>(url: String, type: T.Type) async throws -> T {
+        guard let url = URL(string: url) else {
+            throw URLError(.badURL)
+        }
+        
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        if let httpResponse = response as? HTTPURLResponse {
+            print("DEBUG: Statuscode.. \(httpResponse.statusCode)")
+        }
+        
+        let decodedData = try JSONDecoder().decode(T.self, from: data)
+        return decodedData
     }
 }
