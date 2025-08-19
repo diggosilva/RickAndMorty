@@ -10,7 +10,7 @@ import Foundation
 final class Service {
     
     func getCharacters() async throws -> [Char] {
-        let charResponse = try await request(url: "https://rickandmortyapi.com/api/character", type: CharResponse.self)
+        let charResponse = try await request(endpoint: Endpoint.character, type: CharResponse.self)
         
         let characters = charResponse.results.map { chars in
             Char(
@@ -31,8 +31,8 @@ final class Service {
         return characters
     }
     
-    func request<T: Codable>(url: String, type: T.Type) async throws -> T {
-        guard let url = URL(string: url) else {
+    func request<T: Codable>(endpoint: EndpointProtocol, type: T.Type) async throws -> T {
+        guard let url = endpoint.createURL() else {
             throw URLError(.badURL)
         }
         
