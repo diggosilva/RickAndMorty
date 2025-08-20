@@ -9,7 +9,7 @@ import Foundation
 
 struct CharResponse: Codable {
     let info: Info
-    let results: [CharDTO]
+    let results: [ResultChar]
 
     struct Info: Codable {
         let count: Int
@@ -18,7 +18,7 @@ struct CharResponse: Codable {
         let prev: String?
     }
 
-    struct CharDTO: Codable {
+    struct ResultChar: Codable {
         let id: Int
         let name: String
         let status: String
