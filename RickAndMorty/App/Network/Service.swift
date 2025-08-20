@@ -20,8 +20,8 @@ final class Service {
                 species: chars.species,
                 type: chars.type,
                 gender: chars.gender,
-                origin: Location(name: chars.origin.name, url: chars.origin.url),
-                location: Location(name: chars.location.name, url: chars.location.url),
+                origin: CharLocation(name: chars.origin.name, url: chars.origin.url),
+                location: CharLocation(name: chars.location.name, url: chars.location.url),
                 image: chars.image,
                 episode: chars.episode,
                 url: chars.url,
@@ -29,6 +29,23 @@ final class Service {
             )
         }
         return characters
+    }
+    
+    func getLocations() async throws -> [Location] {
+        let locationResponse = try await request(endpoint: Endpoint.location, type: LocationResponse.self)
+        
+        let locations = locationResponse.results.map { locations in
+            Location(
+                id: locations.id,
+                name: locations.name,
+                type: locations.type,
+                dimension: locations.dimension,
+                residents: locations.residents,
+                url: locations.url,
+                created: locations.created
+            )
+        }
+        return locations
     }
     
     func request<T: Codable>(endpoint: EndpointProtocol, type: T.Type) async throws -> T {
