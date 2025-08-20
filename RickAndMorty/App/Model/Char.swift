@@ -14,14 +14,15 @@ struct Char: Codable {
     let species: String
     let type: String
     let gender: String
-    let origin, location: Location
+    let origin: CharLocation
+    let location: CharLocation
     let image: String
     let episode: [String]
     let url: String
     let created: String
 }
 
-struct Location: Codable {
+struct CharLocation: Codable {
     let name: String
     let url: String
 }
