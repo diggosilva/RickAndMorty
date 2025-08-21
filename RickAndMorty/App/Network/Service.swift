@@ -48,6 +48,24 @@ final class Service {
         return locations
     }
     
+    func getEpisodes() async throws -> [Episode] {
+        let episodeResponse = try await request(endpoint: Endpoint.episode, type: EpisodeResponse.self)
+        
+        let episodes = episodeResponse.results.map { episodes in
+            Episode(
+                id: episodes.id,
+                name: episodes.name,
+                airDate: episodes.airDate,
+                episode: episodes.episode,
+                characters: episodes.characters,
+                url: episodes.url,
+                created: episodes.created
+            )
+        }
+        episodes.forEach { print("🔹 \($0.name)") }
+        return episodes
+    }
+    
     func request<T: Codable>(endpoint: EndpointProtocol, type: T.Type) async throws -> T {
         guard let url = endpoint.createURL() else {
             throw URLError(.badURL)
