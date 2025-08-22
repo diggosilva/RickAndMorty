@@ -7,7 +7,13 @@
 
 import Foundation
 
-final class Service {
+protocol ServiceProtocol {
+    func getCharacters() async throws -> [Char]
+    func getLocations() async throws -> [Location]
+    func getEpisodes() async throws -> [Episode]
+}
+
+final class Service: ServiceProtocol {
     
     func getCharacters() async throws -> [Char] {
         let charResponse = try await request(endpoint: Endpoint.character, type: CharResponse.self)
@@ -62,11 +68,10 @@ final class Service {
                 created: episodes.created
             )
         }
-        episodes.forEach { print("🔹 \($0.name)") }
         return episodes
     }
     
-    func request<T: Codable>(endpoint: EndpointProtocol, type: T.Type) async throws -> T {
+    private func request<T: Codable>(endpoint: EndpointProtocol, type: T.Type) async throws -> T {
         guard let url = endpoint.createURL() else {
             throw URLError(.badURL)
         }
