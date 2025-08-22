@@ -30,7 +30,11 @@ class FeedViewModel: FeedViewModelProtocol {
         $state.eraseToAnyPublisher()
     }
     
-    let service = Service()
+    let service: ServiceProtocol
+    
+    init(service: ServiceProtocol = Service()) {
+        self.service = service
+    }
     
     func numberOfItems() -> Int {
         return chars.count
