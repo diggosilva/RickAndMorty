@@ -12,7 +12,8 @@ enum HTTPMethod: String {
 }
 
 protocol EndpointProtocol {
-    var baseURL: String { get }
+    var scheme: String { get }
+    var host: String { get }
     var path: String { get }
     var method: HTTPMethod { get }
     var queryItems: [URLQueryItem]? { get }
@@ -31,8 +32,12 @@ enum Endpoint: EndpointProtocol {
     case pagedEpisodes(page: Int)
     case pagedLocations(page: Int)
     
-    var baseURL: String {
-        return "https://rickandmortyapi.com"
+    var scheme: String {
+        return "https"
+    }
+    
+    var host: String {
+        return "rickandmortyapi.com"
     }
     
     var path: String {
@@ -65,11 +70,13 @@ enum Endpoint: EndpointProtocol {
     }
     
     func createURL() -> URL? {
-        var urlComponents = URLComponents(string: baseURL)
-        urlComponents?.path = path
-        urlComponents?.queryItems = queryItems
+        var urlComponents = URLComponents()
+        urlComponents.scheme = scheme
+        urlComponents.host = host
+        urlComponents.path = path
+        urlComponents.queryItems = queryItems
         
-        print("DEBUG: URL.. \(String(describing: urlComponents?.url))")
-        return urlComponents?.url
+        print("DEBUG: URL.. \(String(describing: urlComponents.url))")
+        return urlComponents.url
     }
 }
