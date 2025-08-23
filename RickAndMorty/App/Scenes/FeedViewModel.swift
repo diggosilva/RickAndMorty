@@ -45,7 +45,7 @@ class FeedViewModel: FeedViewModelProtocol {
     }
     
     func fetchCharacters() {
-        Task {
+        Task { @MainActor in
             do {
                 chars = try await service.getCharacters()
                 state = .loaded
