@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  FeedViewController.swift
 //  RickAndMorty
 //
 //  Created by Diggo Silva on 17/08/25.
@@ -34,16 +34,11 @@ class FeedViewController: UIViewController {
             .sink { [weak self] state in
                 guard let self = self else { return }
                 switch state {
-                    
-                case .loading:
-                    return showLoadingState()
-                case .loaded:
-                    return showLoadedState()
-                case .error:
-                    return showErrorState()
+                case .loading: return showLoadingState()
+                case .loaded: return showLoadedState()
+                case .error: return showErrorState()
                 }
             }.store(in: &cancellables)
-        
     }
     
     private func showLoadingState() {
