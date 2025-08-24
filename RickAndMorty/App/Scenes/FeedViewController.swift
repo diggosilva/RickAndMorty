@@ -10,6 +10,7 @@ import Combine
 
 class FeedViewController: UIViewController {
     
+    let feedView = FeedView()
     let viewModel: any FeedViewModelProtocol
     
     private var cancellables = Set<AnyCancellable>()
@@ -21,11 +22,25 @@ class FeedViewController: UIViewController {
     
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
+    override func loadView() {
+        super.loadView()
+        view = feedView
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        setupNavigationBar()
+        setupDelegatesAndDataSources()
         viewModel.fetchCharacters()
         handleStates()
+    }
+    
+    private func setupNavigationBar() {
+        navigationItem.title = "Personagens"
+    }
+    
+    private func setupDelegatesAndDataSources() {
+        feedView.collectionView.dataSource = self
     }
     
     private func handleStates() {
@@ -42,14 +57,30 @@ class FeedViewController: UIViewController {
     }
     
     private func showLoadingState() {
-        print("DEBUG: Loading...")
+        feedView.spinner.startAnimating()
     }
     
     private func showLoadedState() {
-        print("DEBUG: Loaded!!!")
+        feedView.spinner.stopAnimating()
+        feedView.collectionView.reloadData()
     }
     
     private func showErrorState() {
-        print("DEBUG: ERROR..")
+        showCustomAlert(title: "Ops! Ocorreu um erro!", message: "Tente novamente mais tarde!", buttonTitle: "Ok") {
+            self.feedView.spinner.stopAnimating()
+        }
+    }
+}
+
+extension FeedViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return viewModel.numberOfItems()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCell.identifier, for: indexPath) as? FeedCell else { return UICollectionViewCell() }
+        let char = viewModel.cellForItem(at: indexPath)
+        cell.configure(char: char)
+        return cell
     }
 }
