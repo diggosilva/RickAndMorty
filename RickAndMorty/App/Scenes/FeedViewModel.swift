@@ -17,12 +17,14 @@ enum FeedViewControllerStates {
 protocol FeedViewModelProtocol: StatefulViewModel where State == FeedViewControllerStates {
     func numberOfItems() -> Int
     func cellForItem(at indexPath: IndexPath) -> Char
-    func fetchCharacters()    
+    func searchBarTextDidChange(searchText: String)
+    func fetchCharacters()
 }
 
 class FeedViewModel: FeedViewModelProtocol {
     
-    var chars: [Char] = []
+    private var chars: [Char] = []
+    private var filteredChars: [Char] = []
     
     @Published private var state: FeedViewControllerStates = .loading
     
@@ -37,22 +39,43 @@ class FeedViewModel: FeedViewModelProtocol {
     }
     
     func numberOfItems() -> Int {
-        return chars.count
+        return filteredChars.count
     }
     
     func cellForItem(at indexPath: IndexPath) -> Char {
-        return chars[indexPath.item]
+        return filteredChars[indexPath.item]
+    }
+    
+    func searchBarTextDidChange(searchText: String) {
+        if searchText.isEmpty {
+            filteredChars = chars
+        } else {
+            filteredChars = chars.filter {
+                $0.name.lowercased().contains(searchText.lowercased()) ||
+                translateStatus($0.status).contains(searchText.lowercased())
+            }
+        }
     }
     
     func fetchCharacters() {
         Task { @MainActor in
             do {
                 chars = try await service.getCharacters()
+                filteredChars = chars
                 state = .loaded
             } catch {
                 state = .error
                 throw error
             }
+        }
+    }
+    
+    private func translateStatus(_ englishStatus: String) -> String {
+        switch englishStatus.lowercased() {
+        case "alive": return "vivo"
+        case "dead": return "morto"
+        case "unknown": return "desconhecido"
+        default: return englishStatus.lowercased()
         }
     }
 }
