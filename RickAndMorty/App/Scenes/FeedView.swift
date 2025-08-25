@@ -7,6 +7,10 @@
 
 import UIKit
 
+enum Section {
+    case main
+}
+
 class FeedView: UIView {
     
     lazy var collectionView: UICollectionView = {
@@ -34,6 +38,8 @@ class FeedView: UIView {
         spinner.color = .label
         return spinner
     }()
+    
+    var dataSource: UICollectionViewDiffableDataSource<Section, Char>!
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
