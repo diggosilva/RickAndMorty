@@ -29,24 +29,9 @@ class FeedViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupSearchController()
-        setupDelegatesAndDataSources()
-        viewModel.fetchCharacters()
+        configureView()
         handleStates()
-    }
-    
-    private func setupSearchController() {
-        searchController.searchResultsUpdater = self
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Buscar personagem"
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
-        navigationItem.title = "Personagens"
-        definesPresentationContext = true
-    }
-    
-    private func setupDelegatesAndDataSources() {
-        feedView.collectionView.dataSource = self
+        viewModel.fetchCharacters()
     }
     
     private func handleStates() {
@@ -55,9 +40,15 @@ class FeedViewController: UIViewController {
             .sink { [weak self] state in
                 guard let self = self else { return }
                 switch state {
-                case .loading: return showLoadingState()
-                case .loaded: return showLoadedState()
-                case .error: return showErrorState()
+                case .loading:
+                    showLoadingState()
+                    
+                case .loaded:
+                    updateData(on: viewModel.currentCharacters())
+                    showLoadedState()
+                    
+                case .error:
+                    showErrorState()
                 }
             }.store(in: &cancellables)
     }
@@ -76,18 +67,43 @@ class FeedViewController: UIViewController {
             self.feedView.spinner.stopAnimating()
         }
     }
-}
-
-extension FeedViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.numberOfItems()
+    
+    private func configureView() {
+        setupSearchController()
+        setupDelegates()
+        setupDataSource()
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCell.identifier, for: indexPath) as? FeedCell else { return UICollectionViewCell() }
-        let char = viewModel.cellForItem(at: indexPath)
-        cell.configure(char: char)
-        return cell
+    private func setupSearchController() {
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Buscar personagem"
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        navigationItem.title = "Personagens"
+        definesPresentationContext = true
+    }
+    
+    private func setupDelegates() {
+        
+    }
+    
+    private func setupDataSource() {
+        feedView.dataSource = UICollectionViewDiffableDataSource<Section, Char>(collectionView: feedView.collectionView, cellProvider: { (collectionView, indexPath, char) -> UICollectionViewCell in
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCell.identifier, for: indexPath) as? FeedCell else { return UICollectionViewCell() }
+            cell.configure(char: char)
+            return cell
+        })
+    }
+    
+    private func updateData(on chars: [Char]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Char>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(chars)
+        DispatchQueue.main.async {
+            self.feedView.dataSource.apply(snapshot, animatingDifferences: true)
+        }
+        setNeedsUpdateContentUnavailableConfiguration()
     }
 }
 
@@ -95,6 +111,7 @@ extension FeedViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         let searchText = searchController.searchBar.text ?? ""
         viewModel.searchBarTextDidChange(searchText: searchText)
+        updateData(on: viewModel.currentCharacters())
         feedView.collectionView.reloadData()
     }
 }

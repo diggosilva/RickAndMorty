@@ -18,6 +18,7 @@ protocol FeedViewModelProtocol: StatefulViewModel where State == FeedViewControl
     func numberOfItems() -> Int
     func cellForItem(at indexPath: IndexPath) -> Char
     func searchBarTextDidChange(searchText: String)
+    func currentCharacters() -> [Char]
     func fetchCharacters()
 }
 
@@ -55,6 +56,10 @@ class FeedViewModel: FeedViewModelProtocol {
                 translateStatus($0.status).contains(searchText.lowercased())
             }
         }
+    }
+    
+    func currentCharacters() -> [Char] {
+        return filteredChars
     }
     
     func fetchCharacters() {
