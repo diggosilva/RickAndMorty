@@ -25,16 +25,17 @@ class FeedCell: UICollectionViewCell {
     lazy var nameLabel: UILabel = {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
-        lbl.font = .preferredFont(forTextStyle: .subheadline)
+        lbl.font = .systemFont(ofSize: 14, weight: .semibold)
         lbl.textAlignment = .center
-        lbl.numberOfLines = 2
+        lbl.adjustsFontSizeToFitWidth = true
+        lbl.minimumScaleFactor = 0.5
         return lbl
     }()
     
     lazy var statusLabel: UILabel = {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
-        lbl.font = .preferredFont(forTextStyle: .footnote)
+        lbl.font = .systemFont(ofSize: 10, weight: .regular)
         lbl.textAlignment = .center
         return lbl
     }()
@@ -58,19 +59,21 @@ class FeedCell: UICollectionViewCell {
     }
     
     private func setConstraints() {
+        let padding: CGFloat = 8
+        
         NSLayoutConstraint.activate([
             photoImageView.topAnchor.constraint(equalTo: topAnchor),
             photoImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             photoImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            photoImageView.heightAnchor.constraint(equalToConstant: 180),
+            photoImageView.heightAnchor.constraint(equalToConstant: 150),
             
-            nameLabel.topAnchor.constraint(equalTo: photoImageView.bottomAnchor, constant: 8),
-            nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            nameLabel.topAnchor.constraint(equalTo: photoImageView.bottomAnchor, constant: padding / 2),
+            nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
+            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
             
             statusLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             statusLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            statusLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
+            statusLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding),
         ])
     }
     

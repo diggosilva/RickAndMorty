@@ -11,17 +11,20 @@ class FeedView: UIView {
     
     lazy var collectionView: UICollectionView = {
         let widthScreen = (UIScreen.main.bounds.width - 60) / 2
+        let spacing: CGFloat = 20
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 20
-        layout.itemSize = CGSize(width: widthScreen, height: widthScreen * 1.5)
-        layout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+        layout.minimumLineSpacing = spacing
+        layout.itemSize = CGSize(width: widthScreen, height: widthScreen * 1.3)
+        layout.sectionInset = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: spacing)
         
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.translatesAutoresizingMaskIntoConstraints = false
         cv.register(FeedCell.self, forCellWithReuseIdentifier: FeedCell.identifier)
         cv.backgroundColor = .secondarySystemBackground
+        cv.keyboardDismissMode = .onDrag
+        cv.contentInsetAdjustmentBehavior = .always
         return cv
     }()
     

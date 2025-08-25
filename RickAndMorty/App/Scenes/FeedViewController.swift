@@ -10,9 +10,9 @@ import Combine
 
 class FeedViewController: UIViewController {
     
-    let feedView = FeedView()
-    let viewModel: any FeedViewModelProtocol
-    
+    private let feedView = FeedView()
+    private let viewModel: any FeedViewModelProtocol
+    private let searchController = UISearchController(searchResultsController: nil)
     private var cancellables = Set<AnyCancellable>()
     
     init(viewModel: any FeedViewModelProtocol = FeedViewModel()) {
@@ -29,14 +29,20 @@ class FeedViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupNavigationBar()
+        setupSearchController()
         setupDelegatesAndDataSources()
         viewModel.fetchCharacters()
         handleStates()
     }
     
-    private func setupNavigationBar() {
+    private func setupSearchController() {
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Buscar personagem"
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
         navigationItem.title = "Personagens"
+        definesPresentationContext = true
     }
     
     private func setupDelegatesAndDataSources() {
@@ -82,5 +88,13 @@ extension FeedViewController: UICollectionViewDataSource {
         let char = viewModel.cellForItem(at: indexPath)
         cell.configure(char: char)
         return cell
+    }
+}
+
+extension FeedViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        let searchText = searchController.searchBar.text ?? ""
+        viewModel.searchBarTextDidChange(searchText: searchText)
+        feedView.collectionView.reloadData()
     }
 }
