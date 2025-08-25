@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Char: Codable {
+struct Char: Codable, Hashable {
     let id: Int
     let name: String
     let status: String
@@ -20,9 +20,24 @@ struct Char: Codable {
     let episode: [String]
     let url: String
     let created: String
+    
+    static func == (lhs: Char, rhs: Char) -> Bool {
+        return lhs.id == rhs.id &&
+        lhs.name == rhs.name &&
+        lhs.status == rhs.status &&
+        lhs.species == rhs.species &&
+        lhs.type == rhs.type &&
+        lhs.gender == rhs.gender &&
+        lhs.origin == rhs.origin &&
+        lhs.location == rhs.location &&
+        lhs.image == rhs.image &&
+        lhs.episode == rhs.episode &&
+        lhs.url == rhs.url &&
+        lhs.created == rhs.created
+    }
 }
 
-struct CharLocation: Codable {
+struct CharLocation: Codable, Equatable, Hashable {
     let name: String
     let url: String
 }
