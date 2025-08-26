@@ -85,7 +85,7 @@ class FeedViewController: UIViewController {
     }
     
     private func setupDelegates() {
-        
+        feedView.collectionView.delegate = self
     }
     
     private func setupDataSource() {
@@ -114,5 +114,15 @@ extension FeedViewController: UISearchResultsUpdating {
         viewModel.searchBarTextDidChange(searchText: searchText)
         updateData(on: viewModel.currentCharacters())
         feedView.collectionView.reloadData()
+    }
+}
+
+extension FeedViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let totalItems = viewModel.numberOfItems()
+        
+        if indexPath.item >= totalItems - 5 {
+            viewModel.fetchCharacters()
+        }
     }
 }
