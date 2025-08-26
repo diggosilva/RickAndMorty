@@ -26,6 +26,13 @@ class FeedViewModel: FeedViewModelProtocol {
     
     private var chars: [Char] = []
     private var filteredChars: [Char] = []
+    private var page: Int = 1
+    private var isLoading: Bool = false
+    private var searchText: String = ""
+    
+    private var isFiltering: Bool {
+        !searchText.isEmpty
+    }
     
     @Published private var state: FeedViewControllerStates = .loading
     
@@ -48,6 +55,8 @@ class FeedViewModel: FeedViewModelProtocol {
     }
     
     func searchBarTextDidChange(searchText: String) {
+        self.searchText = searchText
+        
         if searchText.isEmpty {
             filteredChars = chars
         } else {
@@ -63,15 +72,22 @@ class FeedViewModel: FeedViewModelProtocol {
     }
     
     func fetchCharacters() {
+        guard !isLoading && !isFiltering else { return }
+        
+        isLoading = true
+        
         Task { @MainActor in
             do {
-                chars = try await service.getCharacters()
+                let newChars = try await service.getCharacters(page: page)
+                chars += newChars
                 filteredChars = chars
                 state = .loaded
+                page += 1
             } catch {
                 state = .error
                 throw error
             }
+            isLoading = false
         }
     }
     
