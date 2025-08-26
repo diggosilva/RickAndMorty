@@ -8,15 +8,15 @@
 import Foundation
 
 protocol ServiceProtocol {
-    func getCharacters() async throws -> [Char]
+    func getCharacters(page: Int) async throws -> [Char]
     func getLocations() async throws -> [Location]
     func getEpisodes() async throws -> [Episode]
 }
 
 final class Service: ServiceProtocol {
     
-    func getCharacters() async throws -> [Char] {
-        let charResponse = try await request(endpoint: Endpoint.character, type: CharResponse.self)
+    func getCharacters(page: Int) async throws -> [Char] {
+        let charResponse = try await request(endpoint: Endpoint.pagedCharacters(page: page), type: CharResponse.self)
         
         let characters = charResponse.results.map { chars in
             Char(
