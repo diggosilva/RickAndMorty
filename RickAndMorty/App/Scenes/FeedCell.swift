@@ -77,12 +77,24 @@ class FeedCell: UICollectionViewCell {
         ])
     }
     
-    func configure(char: Char) {
+    func configure(char: Char, searchText: String) {
         guard let url = URL(string: char.image) else { return }
-        
         photoImageView.sd_setImage(with: url)
-        nameLabel.text = char.name
+        nameLabel.attributedText = highlightedText(fullText: char.name, highlight: searchText)
         statusLabel.text = getStatusChar(char: char)
+    }
+    
+    private func highlightedText(fullText: String, highlight: String) -> NSAttributedString {
+        let attributedText = NSMutableAttributedString(string: fullText)
+
+        if !highlight.isEmpty {
+            let range = (fullText as NSString).range(of: highlight, options: .caseInsensitive)
+            if range.location != NSNotFound {
+                attributedText.addAttribute(.foregroundColor, value: UIColor.systemBlue, range: range)
+                attributedText.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: nameLabel.font.pointSize), range: range)
+            }
+        }
+        return attributedText
     }
     
     private func getStatusChar(char: Char) -> String {
@@ -93,15 +105,5 @@ class FeedCell: UICollectionViewCell {
         } else {
             return "🟡 Desconhecido"
         }
-    }
-    
-    private func applyShadow(view: UIView) {
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOffset = CGSize(width: 5, height: 5)
-        view.layer.shadowOpacity = 0.35
-        view.layer.shadowRadius = 5.0
-        view.layer.cornerRadius = 8
-        view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.systemGray.cgColor
     }
 }
