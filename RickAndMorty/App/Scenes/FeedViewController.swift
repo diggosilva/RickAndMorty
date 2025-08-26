@@ -91,7 +91,8 @@ class FeedViewController: UIViewController {
     private func setupDataSource() {
         feedView.dataSource = UICollectionViewDiffableDataSource<Section, Char>(collectionView: feedView.collectionView, cellProvider: { (collectionView, indexPath, char) -> UICollectionViewCell in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCell.identifier, for: indexPath) as? FeedCell else { return UICollectionViewCell() }
-            cell.configure(char: char)
+            let searchText = self.searchController.searchBar.text ?? ""
+            cell.configure(char: char, searchText: searchText)
             return cell
         })
     }
