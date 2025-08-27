@@ -125,4 +125,12 @@ extension FeedViewController: UICollectionViewDelegate {
             viewModel.fetchCharacters()
         }
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let charSelected = viewModel.cellForItem(at: indexPath)
+        let detailsVM = DetailsViewModel(char: charSelected)
+        let detailsVC = DetailsViewController(viewModel: detailsVM)
+        
+        navigationController?.pushViewController(detailsVC, animated: true)
+    }
 }
