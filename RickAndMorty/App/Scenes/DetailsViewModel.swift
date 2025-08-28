@@ -7,7 +7,12 @@
 
 import Foundation
 
-class DetailsViewModel {
+protocol DetailsViewModelProtocol {
+    func numberOfRows() -> Int
+    func cellForRow(at indexPath: IndexPath) -> Int
+}
+
+class DetailsViewModel: DetailsViewModelProtocol {
     
     private let char: Char
     
@@ -26,5 +31,13 @@ class DetailsViewModel {
         char.episode.compactMap { urlString in
             return Int(urlString.split(separator: "/").last ?? "")
         }
+    }
+    
+    func numberOfRows() -> Int {
+        return episodes.count
+    }
+    
+    func cellForRow(at indexPath: IndexPath) -> Int {
+        return episodes[indexPath.row]
     }
 }
