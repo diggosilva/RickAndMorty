@@ -39,13 +39,11 @@ class DetailsViewController: UIViewController {
             origin: viewModel.origin
         )
         
-        
         detailsView.episodesTableView.delegate = self
         detailsView.episodesTableView.dataSource = self
     }
 }
 
-// MARK: - TableView
 extension DetailsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
