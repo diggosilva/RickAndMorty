@@ -9,10 +9,10 @@ import UIKit
 
 class DetailsViewController: UIViewController {
     
-    private let viewModel: DetailsViewModel
     private let detailsView = DetailsView()
+    private let viewModel: DetailsViewModelProtocol
     
-    init(viewModel: DetailsViewModel) {
+    init(viewModel: DetailsViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -25,35 +25,50 @@ class DetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureView()
+        setupDelegatesAndDataSources()
+        configureViewData()
     }
     
-    private func configureView() {
-        navigationItem.title = viewModel.name
-        
-        detailsView.configure(
-            imageURL: viewModel.imageURL,
-            status: viewModel.status,
-            species: viewModel.species,
-            gender: viewModel.gender,
-            origin: viewModel.origin
-        )
-        
-        detailsView.episodesTableView.delegate = self
+    private func setupDelegatesAndDataSources() {
+        detailsView.infoCollectionView.dataSource = self
+        detailsView.infoCollectionView.delegate = self
         detailsView.episodesTableView.dataSource = self
+        detailsView.episodesTableView.delegate = self
+    }
+    
+    private func configureViewData() {
+        detailsView.configure(imageURL: viewModel.imageURL)
+        detailsView.infoCollectionView.reloadData()
+        detailsView.episodesTableView.reloadData()
+    }
+}
+
+extension DetailsViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return viewModel.numberOfInfoItems()
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: InfoCell.identifier, for: indexPath) as? InfoCell else {
+            return UICollectionViewCell()
+        }
+        
+        let item = viewModel.infoItem(at: indexPath)
+        cell.configure(title: item.title, value: item.value)
+        cell.applyStyle(for: indexPath.item)
+        return cell
     }
 }
 
 extension DetailsViewController: UITableViewDataSource, UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.numberOfRows()
+        return viewModel.numberOfRows()
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let id = viewModel.cellForRow(at: indexPath)
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = "Episódio \(id)"
+        let episodeId = viewModel.cellForRow(at: indexPath)
+        cell.textLabel?.text = "Episódio \(episodeId)"
         return cell
     }
 }
