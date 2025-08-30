@@ -127,7 +127,7 @@ extension FeedViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let charSelected = viewModel.cellForItem(at: indexPath)
+        let charSelected = viewModel.character(at: indexPath)
         let detailsVM = DetailsViewModel(char: charSelected)
         let detailsVC = DetailsViewController(viewModel: detailsVM)
         
