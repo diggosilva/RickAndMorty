@@ -26,7 +26,6 @@ class FeedView: UIView {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.translatesAutoresizingMaskIntoConstraints = false
         cv.register(FeedCell.self, forCellWithReuseIdentifier: FeedCell.identifier)
-        cv.backgroundColor = .secondarySystemBackground
         cv.keyboardDismissMode = .onDrag
         cv.contentInsetAdjustmentBehavior = .always
         return cv

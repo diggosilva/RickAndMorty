@@ -16,7 +16,7 @@ enum FeedViewControllerStates {
 
 protocol FeedViewModelProtocol: StatefulViewModel where State == FeedViewControllerStates {
     func numberOfItems() -> Int
-    func cellForItem(at indexPath: IndexPath) -> Char
+    func character(at indexPath: IndexPath) -> Char
     func searchBarTextDidChange(searchText: String)
     func currentCharacters() -> [Char]
     func fetchCharacters()
@@ -50,7 +50,7 @@ class FeedViewModel: FeedViewModelProtocol {
         return filteredChars.count
     }
     
-    func cellForItem(at indexPath: IndexPath) -> Char {
+    func character(at indexPath: IndexPath) -> Char {
         return filteredChars[indexPath.item]
     }
     
