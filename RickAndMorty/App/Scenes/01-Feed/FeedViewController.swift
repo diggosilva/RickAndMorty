@@ -74,6 +74,27 @@ class FeedViewController: UIViewController {
         setupDataSource()
     }
     
+    override func updateContentUnavailableConfiguration(using state: UIContentUnavailableConfigurationState) {
+        guard let dataSource = feedView.dataSource else { return }
+        
+        let isEmpty = dataSource.snapshot().itemIdentifiers.isEmpty
+        
+        if isEmpty {
+            var config = UIContentUnavailableConfiguration.empty()
+            config.image = .init(systemName: "person.slash")
+            config.text = "Sem personagens"
+            
+            let searchText = searchController.searchBar.text ?? ""
+            config.secondaryText = searchText.isEmpty
+            ? "Nenhum personagem encontrado."
+            : "Nenhum personagem com o termo '\(searchText)'"
+            
+            contentUnavailableConfiguration = config
+        } else {
+            contentUnavailableConfiguration = nil
+        }
+    }
+    
     private func setupSearchController() {
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
