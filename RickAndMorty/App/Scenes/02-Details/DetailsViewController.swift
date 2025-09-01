@@ -27,6 +27,11 @@ class DetailsViewController: UIViewController {
         super.viewDidLoad()
         setupDelegatesAndDataSources()
         configureViewData()
+        setupNavBar()
+    }
+    
+    private func setupNavBar() {
+        navigationItem.title = viewModel.name
     }
     
     private func setupDelegatesAndDataSources() {
