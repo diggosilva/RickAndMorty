@@ -13,6 +13,7 @@ protocol DetailsViewModelProtocol {
     func numberOfRows() -> Int
     func cellForRow(at indexPath: IndexPath) -> Int
     var imageURL: String { get }
+    var name: String { get }
 }
 
 class DetailsViewModel: DetailsViewModelProtocol {
