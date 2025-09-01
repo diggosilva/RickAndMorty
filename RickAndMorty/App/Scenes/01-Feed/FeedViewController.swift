@@ -59,7 +59,7 @@ class FeedViewController: UIViewController {
     
     private func showLoadedState() {
         feedView.spinner.stopAnimating()
-        feedView.collectionView.reloadData()
+        setNeedsUpdateContentUnavailableConfiguration()
     }
     
     private func showErrorState() {
@@ -75,20 +75,18 @@ class FeedViewController: UIViewController {
     }
     
     override func updateContentUnavailableConfiguration(using state: UIContentUnavailableConfigurationState) {
-        guard let dataSource = feedView.dataSource else { return }
-        
-        let isEmpty = dataSource.snapshot().itemIdentifiers.isEmpty
-        
-        if isEmpty {
+        if viewModel.numberOfItems() == 0 && !feedView.spinner.isAnimating {
             var config = UIContentUnavailableConfiguration.empty()
             config.image = .init(systemName: "person.slash")
             config.text = "Sem personagens"
             
             let searchText = searchController.searchBar.text ?? ""
-            config.secondaryText = searchText.isEmpty
-            ? "Nenhum personagem encontrado."
-            : "Nenhum personagem com o termo '\(searchText)'"
             
+            if searchText.isEmpty {
+                config.secondaryText = "Nenhum personagem encontrado."
+            } else {
+                config.secondaryText = "Nenhum personagem com o termo '\(searchText)'"
+            }
             contentUnavailableConfiguration = config
         } else {
             contentUnavailableConfiguration = nil
