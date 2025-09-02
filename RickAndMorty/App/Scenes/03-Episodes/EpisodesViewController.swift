@@ -6,10 +6,13 @@
 //
 
 import UIKit
+import Combine
 
 class EpisodesViewController: UIViewController {
     
     private let episodesView = EpisodesView()
+    private let viewModel = EpisodesViewModel()
+    private var cancellables = Set<AnyCancellable>()
     
     override func loadView() {
         super.loadView()
@@ -20,6 +23,36 @@ class EpisodesViewController: UIViewController {
         super.viewDidLoad()
         setupNavigationBar()
         setupDelegatesAndDataSources()
+        handleStates()
+        viewModel.fetchEpisodes()
+    }
+    
+    private func handleStates() {
+        viewModel.statePublisher
+            .receive(on: RunLoop.main)
+            .sink { states in
+                switch states {
+                case .loading:
+                    self.showLoadingState()
+                case .loaded:
+                    self.showLoadedState()
+                case .error:
+                    self.showErrorState()
+                }
+            }.store(in: &cancellables)
+    }
+    
+    private func showLoadingState() {
+        print("DEBUG: CARREGANDO...")
+#warning("Implementar loading state com Spinner")
+    }
+    
+    private func showLoadedState() {
+        episodesView.tableView.reloadData()
+    }
+    
+    private func showErrorState() {
+        showCustomAlert(title: "Erro!", message: "Não foi possível carregar os episódios.", buttonTitle: "OK")
     }
     
     private func setupNavigationBar() {
@@ -33,19 +66,16 @@ class EpisodesViewController: UIViewController {
 
 extension EpisodesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 20
+        return viewModel.numberOfRows()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
         var content = cell.defaultContentConfiguration()
-        content.text = "Episode \(indexPath.row + 1)"
-        content.secondaryText = "Season 1"
-        content.image = UIImage(systemName: "chevron.right")
+        content.text = viewModel.episode(at: indexPath).name
         cell.contentConfiguration = content
         
         return cell
     }
-    
 }
