@@ -40,7 +40,7 @@ class FeedViewModel: FeedViewModelProtocol {
         $state.eraseToAnyPublisher()
     }
     
-    let service: ServiceProtocol
+    private let service: ServiceProtocol
     
     init(service: ServiceProtocol = Service()) {
         self.service = service
