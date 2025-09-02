@@ -42,15 +42,4 @@ class LocationViewController: UIViewController {
         navigationItem.title = "Location"
         view.backgroundColor = .systemYellow
     }
-    
-}
-
-class EpisodesViewController: UIViewController {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        navigationItem.title = "Episodes"
-        view.backgroundColor = .orange
-    }
-    
 }
