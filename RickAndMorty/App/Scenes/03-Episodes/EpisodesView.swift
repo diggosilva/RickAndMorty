@@ -12,8 +12,16 @@ class EpisodesView: UIView {
     lazy var tableView: UITableView = {
         let tv = UITableView()
         tv.translatesAutoresizingMaskIntoConstraints = false
-        tv.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tv.separatorStyle = .none
+        tv.register(EpisodesCell.self, forCellReuseIdentifier: EpisodesCell.identifier)
         return tv
+    }()
+    
+    lazy var spinner: UIActivityIndicatorView = {
+        let spinner = UIActivityIndicatorView(style: .large)
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.color = .label
+        return spinner
     }()
     
     override init(frame: CGRect) {
@@ -29,7 +37,7 @@ class EpisodesView: UIView {
     }
     
     private func setHierarchy() {
-        addSubviews(tableView)
+        addSubviews(tableView, spinner)
         backgroundColor = .systemBackground
     }
     
@@ -38,7 +46,10 @@ class EpisodesView: UIView {
             tableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
+            spinner.centerXAnchor.constraint(equalTo: centerXAnchor),
+            spinner.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
     }
 }
