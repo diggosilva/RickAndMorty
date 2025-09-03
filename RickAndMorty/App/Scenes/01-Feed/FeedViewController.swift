@@ -149,7 +149,7 @@ extension FeedViewController: UICollectionViewDelegate {
         let charSelected = viewModel.character(at: indexPath)
         let detailsVM = DetailsViewModel(char: charSelected)
         let detailsVC = DetailsViewController(viewModel: detailsVM)
-        
+        detailsVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(detailsVC, animated: true)
     }
 }
