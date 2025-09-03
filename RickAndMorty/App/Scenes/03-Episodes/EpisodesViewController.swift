@@ -43,11 +43,11 @@ class EpisodesViewController: UIViewController {
     }
     
     private func showLoadingState() {
-        print("DEBUG: CARREGANDO...")
-#warning("Implementar loading state com Spinner")
+        episodesView.spinner.startAnimating()
     }
     
     private func showLoadedState() {
+        episodesView.spinner.stopAnimating()
         episodesView.tableView.reloadData()
     }
     
@@ -61,6 +61,7 @@ class EpisodesViewController: UIViewController {
     
     private func setupDelegatesAndDataSources() {
         episodesView.tableView.dataSource = self
+        episodesView.tableView.delegate = self
     }
 }
 
@@ -70,12 +71,15 @@ extension EpisodesViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        
-        var content = cell.defaultContentConfiguration()
-        content.text = viewModel.episode(at: indexPath).name
-        cell.contentConfiguration = content
-        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: EpisodesCell.identifier, for: indexPath) as? EpisodesCell else { return UITableViewCell() }
+        let episode = viewModel.episode(at: indexPath)
+        cell.configure(episode: episode)        
         return cell
+    }
+}
+
+extension EpisodesViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
