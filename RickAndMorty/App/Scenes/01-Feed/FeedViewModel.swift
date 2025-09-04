@@ -28,6 +28,7 @@ class FeedViewModel: FeedViewModelProtocol {
     private var filteredChars: [Char] = []
     private var page: Int = 1
     private var isLoading: Bool = false
+    private var hasMorePages: Bool = true
     private var searchText: String = ""
     
     private var isFiltering: Bool {
@@ -72,20 +73,22 @@ class FeedViewModel: FeedViewModelProtocol {
     }
     
     func fetchCharacters() {
-        guard !isLoading && !isFiltering else { return }
-        
+        guard !isLoading, !isFiltering, hasMorePages else { return }
+
         isLoading = true
         
         Task { @MainActor in
             do {
                 let newChars = try await service.getCharacters(page: page)
-                chars += newChars
+                chars.append(contentsOf: newChars.characters)
                 filteredChars = chars
                 state = .loaded
                 page += 1
+                hasMorePages = newChars.hasMorePages
             } catch {
-                state = .error
-                throw error
+                if hasMorePages {
+                    state = .error
+                }
             }
             isLoading = false
         }
