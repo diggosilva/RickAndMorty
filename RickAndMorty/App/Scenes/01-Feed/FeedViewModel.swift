@@ -86,9 +86,7 @@ class FeedViewModel: FeedViewModelProtocol {
                 page += 1
                 hasMorePages = newChars.hasMorePages
             } catch {
-                if hasMorePages {
-                    state = .error
-                }
+                state = .error
             }
             isLoading = false
         }
