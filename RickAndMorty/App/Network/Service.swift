@@ -8,14 +8,14 @@
 import Foundation
 
 protocol ServiceProtocol {
-    func getCharacters(page: Int) async throws -> [Char]
+    func getCharacters(page: Int) async throws -> CharsPage
     func getLocations() async throws -> [Location]
     func getEpisodes() async throws -> [Episode]
 }
 
 final class Service: ServiceProtocol {
     
-    func getCharacters(page: Int) async throws -> [Char] {
+    func getCharacters(page: Int) async throws -> CharsPage {
         let charResponse = try await request(endpoint: Endpoint.pagedCharacters(page: page), type: CharResponse.self)
         
         let characters = charResponse.results.map { chars in
@@ -34,7 +34,7 @@ final class Service: ServiceProtocol {
                 created: chars.created
             )
         }
-        return characters
+        return CharsPage(characters: characters, hasMorePages: charResponse.info.next != nil)
     }
     
     func getLocations() async throws -> [Location] {
