@@ -24,6 +24,10 @@ class EpisodesViewModel: EpisodeViewModel {
     
     private var episodes: [Episode] = []
     private let service: ServiceProtocol
+    private var page: Int = 1
+    private var isLoading: Bool = false
+    private var hasMorePages: Bool = true
+    
     @Published private var state: EpisodesViewControllerStates = .loading
     
     var statePublisher: AnyPublisher<EpisodesViewControllerStates, Never> {
@@ -43,17 +47,21 @@ class EpisodesViewModel: EpisodeViewModel {
     }
     
     func fetchEpisodes() {
-        state = .loading
+        guard !isLoading, hasMorePages else { return }
         
-        Task {
+        isLoading = true
+        
+        Task { @MainActor in
             do {
-                let episodes = try await service.getEpisodes()
-                self.episodes = episodes
+                let newEpisodes = try await service.getEpisodes(page: page)
+                episodes.append(contentsOf: newEpisodes.episodes)
                 state = .loaded
+                page += 1
+                hasMorePages = newEpisodes.hasMorePages
             } catch {
                 state = .error
-                throw error
             }
+            isLoading = false
         }
     }
 }

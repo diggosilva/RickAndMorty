@@ -10,7 +10,7 @@ import Foundation
 protocol ServiceProtocol {
     func getCharacters(page: Int) async throws -> CharsPage
     func getLocations() async throws -> [Location]
-    func getEpisodes() async throws -> [Episode]
+    func getEpisodes(page: Int) async throws -> EpisodesPage
 }
 
 final class Service: ServiceProtocol {
@@ -54,8 +54,8 @@ final class Service: ServiceProtocol {
         return locations
     }
     
-    func getEpisodes() async throws -> [Episode] {
-        let episodeResponse = try await request(endpoint: Endpoint.episode, type: EpisodeResponse.self)
+    func getEpisodes(page: Int) async throws -> EpisodesPage {
+        let episodeResponse = try await request(endpoint: Endpoint.pagedEpisodes(page: page), type: EpisodeResponse.self)
         
         let episodes = episodeResponse.results.map { episodes in
             Episode(
@@ -68,7 +68,7 @@ final class Service: ServiceProtocol {
                 created: episodes.created
             )
         }
-        return episodes
+        return EpisodesPage(episodes: episodes, hasMorePages: episodeResponse.info.next != nil)
     }
     
     private func request<T: Codable>(endpoint: EndpointProtocol, type: T.Type) async throws -> T {
