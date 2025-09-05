@@ -43,3 +43,6 @@ class LocationViewController: UIViewController {
         view.backgroundColor = .systemYellow
     }
 }
+
+
+Então, mas eu coloco o prefixo, justamente porque eu nao consigo colocar na ordem que eu quero, ele organiza automaticamente por ordem alfabética. Se tiver um jeito de mudar isso eu removo os prefixos
