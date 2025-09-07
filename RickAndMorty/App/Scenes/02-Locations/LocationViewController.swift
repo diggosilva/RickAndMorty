@@ -9,16 +9,19 @@ import UIKit
 
 class LocationViewController: UIViewController {
     
-    let viewModel = LocationViewModel()
-    let tableView = UITableView()
+    private let locationView = LocationView()
+    private let viewModel = LocationViewModel()
+    
+    override func loadView() {
+        super.loadView()
+        view = locationView
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTableView()
         setupNavigationBar()
         setupDelegatesAndDataSources()
         viewModel.fetchLocations()
-        view.backgroundColor = .systemBackground
     }
     
     private func setupNavigationBar() {
@@ -26,21 +29,8 @@ class LocationViewController: UIViewController {
     }
     
     private func setupDelegatesAndDataSources() {
-        tableView.dataSource = self
-        tableView.delegate = self
-    }
-    
-    func setupTableView() {
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        view.addSubview(tableView)
-        
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        ])
+        locationView.tableView.dataSource = self
+        locationView.tableView.delegate = self
     }
 }
 
