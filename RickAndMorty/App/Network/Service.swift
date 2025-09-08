@@ -38,7 +38,7 @@ final class Service: ServiceProtocol {
     }
     
     func getLocations(page: Int) async throws -> LocationsPage {
-        let locationResponse = try await request(endpoint: Endpoint.location, type: LocationResponse.self)
+        let locationResponse = try await request(endpoint: Endpoint.pagedLocations(page: page), type: LocationResponse.self)
         
         let locations = locationResponse.results.map { locations in
             Location(
