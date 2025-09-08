@@ -6,11 +6,13 @@
 //
 
 import UIKit
+import Combine
 
 class LocationViewController: UIViewController {
     
     private let locationView = LocationView()
     private let viewModel = LocationViewModel()
+    private var cancellables = Set<AnyCancellable>()
     
     override func loadView() {
         super.loadView()
@@ -21,7 +23,35 @@ class LocationViewController: UIViewController {
         super.viewDidLoad()
         setupNavigationBar()
         setupDelegatesAndDataSources()
+        handleStates()
         viewModel.fetchLocations()
+    }
+    
+    private func handleStates() {
+        viewModel.statePublisher
+            .receive(on: RunLoop.main)
+            .sink { [weak self] state in
+                switch state {
+                case .loading: self?.showLoadingState()
+                case .loaded: self?.showLoadedState()
+                case .error: self?.showErrorState()
+                }
+            }.store(in: &cancellables)
+    }
+    
+    private func showLoadingState() {
+        locationView.spinner.startAnimating()
+    }
+    
+    private func showLoadedState() {
+        locationView.spinner.stopAnimating()
+        locationView.tableView.reloadData()
+    }
+    
+    private func showErrorState() {
+        showCustomAlert(title: "Ops...", message: "Não foi possível carregar os Locais!", buttonTitle: "Ok") {
+            self.locationView.spinner.stopAnimating()
+        }
     }
     
     private func setupNavigationBar() {
@@ -36,18 +66,13 @@ class LocationViewController: UIViewController {
 
 extension LocationViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return viewModel.numberOfRows()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        
-        var content = cell.defaultContentConfiguration()
-        content.text = "Planeta Terra"
-        content.secondaryText = "Césio 137"
-        content.image = UIImage(systemName: "map")
-        
-        cell.contentConfiguration = content
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: LocationCell.identifier, for: indexPath) as? LocationCell else { return UITableViewCell() }
+        let residents: [Resident] = []
+        cell.configure(with: viewModel.location(at: indexPath), residents: residents)
         return cell
     }
 }
