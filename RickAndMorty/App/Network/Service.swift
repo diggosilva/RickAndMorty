@@ -8,12 +8,31 @@
 import Foundation
 
 protocol ServiceProtocol {
+    func getCharacterDetail(id: Int) async throws -> Char
     func getCharacters(page: Int) async throws -> CharsPage
     func getLocations(page: Int) async throws -> LocationsPage
     func getEpisodes(page: Int) async throws -> EpisodesPage
 }
 
 final class Service: ServiceProtocol {
+    
+    func getCharacterDetail(id: Int) async throws -> Char {
+        let charResponse = try await request(endpoint: Endpoint.characterDetail(id: id), type: CharResponse.ResultChar.self)
+        return Char(
+            id: charResponse.id,
+            name: charResponse.name,
+            status: charResponse.status,
+            species: charResponse.species,
+            type: charResponse.type,
+            gender: charResponse.gender,
+            origin: CharLocation(name: charResponse.origin.name, url: charResponse.origin.url),
+            location: CharLocation(name: charResponse.location.name, url: charResponse.location.url),
+            image: charResponse.image,
+            episode: charResponse.episode,
+            url: charResponse.url,
+            created: charResponse.created
+        )
+    }
     
     func getCharacters(page: Int) async throws -> CharsPage {
         let charResponse = try await request(endpoint: Endpoint.pagedCharacters(page: page), type: CharResponse.self)
