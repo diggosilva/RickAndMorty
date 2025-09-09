@@ -54,7 +54,15 @@ class ResidentCell: UICollectionViewCell {
             
             nameLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 8),
             nameLabel.leadingAnchor.constraint(equalTo: avatarImageView.leadingAnchor),
+            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
             nameLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
         ])
+    }
+    
+    func configure(with resident: Resident) {
+        guard let url = URL(string: resident.imageURL) else { return }
+        
+//        avatarImageView.sd_setImage(with: url)
+        nameLabel.text = resident.name
     }
 }
