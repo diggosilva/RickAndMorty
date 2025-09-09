@@ -16,7 +16,6 @@ struct Resident {
 class LocationCell: UITableViewCell {
     
     static let identifier = "LocationCell"
-    private var residents: [Resident] = []
     
     lazy var containerView: UIView = {
         let view = UIView()
@@ -27,41 +26,11 @@ class LocationCell: UITableViewCell {
         return view
     }()
     
-    lazy var nameLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .headline)
-        return label
-    }()
-    
-    lazy var typeLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .subheadline)
-        return label
-    }()
-    
-    lazy var dimensionLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .subheadline)
-        return label
-    }()
-    
-    lazy var dividerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .systemGray4
-        return view
-    }()
-    
-    lazy var residentLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .headline)
-        label.text = "Residents"
-        return label
-    }()
+    lazy var nameLabel = DSViewBuilder.buildLabel(font: .preferredFont(forTextStyle: .headline))
+    lazy var typeLabel = DSViewBuilder.buildLabel(font: .preferredFont(forTextStyle: .subheadline))
+    lazy var dimensionLabel = DSViewBuilder.buildLabel(font: .preferredFont(forTextStyle: .subheadline))
+    lazy var dividerView = DSViewBuilder.buildDivider()
+    lazy var residentLabel = DSViewBuilder.buildLabel(text: "Residents", font: .preferredFont(forTextStyle: .headline))
     
     lazy var collectionView: UICollectionView = {
         var layout = UICollectionViewFlowLayout()
@@ -93,14 +62,9 @@ class LocationCell: UITableViewCell {
     }
     
     private func setHierarchy() {
-        contentView.addSubview(containerView)
+        contentView.addSubviews(containerView, nameLabel, typeLabel, dividerView, residentLabel, collectionView)
         contentView.backgroundColor = .clear
         
-        containerView.addSubview(nameLabel)
-        containerView.addSubview(typeLabel)
-        containerView.addSubview(dividerView)
-        containerView.addSubview(residentLabel)
-        containerView.addSubview(collectionView)
         containerView.layer.borderWidth = 1
         containerView.layer.borderColor = UIColor.systemGray2.cgColor
         
@@ -139,6 +103,9 @@ class LocationCell: UITableViewCell {
             collectionView.heightAnchor.constraint(equalToConstant: 100),
         ])
     }
+    
+    var residents: [Resident] = []
+    let viewModel = LocationViewModel()
     
     func configure(with location: Location, residents: [Resident]) {
         nameLabel.text = location.name
