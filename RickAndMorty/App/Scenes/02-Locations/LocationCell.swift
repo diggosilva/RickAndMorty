@@ -8,11 +8,6 @@
 import UIKit
 import SDWebImage
 
-struct Resident {
-    let name: String
-    let imageURL: String
-}
-
 class LocationCell: UITableViewCell {
     
     static let identifier = "LocationCell"
@@ -35,12 +30,13 @@ class LocationCell: UITableViewCell {
     lazy var collectionView: UICollectionView = {
         var layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.minimumInteritemSpacing = 8
-        layout.itemSize = CGSize(width: 44, height: 44)
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+        layout.minimumInteritemSpacing = 10
+        layout.itemSize = CGSize(width: 80, height: 80)
+        layout.sectionInset = .init(top: 0, left: 16, bottom: 0, right: 16)
         
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.translatesAutoresizingMaskIntoConstraints = false
+        cv.showsHorizontalScrollIndicator = false
         cv.register(ResidentCell.self, forCellWithReuseIdentifier: ResidentCell.identifier)
         cv.backgroundColor = .systemRed
         cv.layer.cornerRadius = 8
@@ -97,10 +93,10 @@ class LocationCell: UITableViewCell {
             residentLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
             
             collectionView.topAnchor.constraint(equalTo: residentLabel.bottomAnchor, constant: padding / 2),
-            collectionView.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -padding),
-            collectionView.heightAnchor.constraint(equalToConstant: 100),
+            collectionView.heightAnchor.constraint(equalToConstant: 80),
         ])
     }
     
@@ -127,8 +123,8 @@ extension LocationCell: UICollectionViewDataSource, UICollectionViewDelegateFlow
         }
         
         let resident = residents[indexPath.item]
-        cell.nameLabel.text = resident.name
-        cell.backgroundColor = .blue // Tento mudar a cor da célula da CollectionView mas não muda.
+        
+        cell.configure(with: resident)
         return cell
     }
 }
