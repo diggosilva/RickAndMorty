@@ -8,7 +8,7 @@
 import Foundation
 
 protocol ServiceProtocol {
-    func getCharacterDetail(id: Int) async throws -> Char
+    func getMultipleCharacters(ids: [Int]) async throws -> [Char]
     func getCharacters(page: Int) async throws -> CharsPage
     func getLocations(page: Int) async throws -> LocationsPage
     func getEpisodes(page: Int) async throws -> EpisodesPage
@@ -16,22 +16,26 @@ protocol ServiceProtocol {
 
 final class Service: ServiceProtocol {
     
-    func getCharacterDetail(id: Int) async throws -> Char {
-        let charResponse = try await request(endpoint: Endpoint.characterDetail(id: id), type: CharResponse.ResultChar.self)
-        return Char(
-            id: charResponse.id,
-            name: charResponse.name,
-            status: charResponse.status,
-            species: charResponse.species,
-            type: charResponse.type,
-            gender: charResponse.gender,
-            origin: CharLocation(name: charResponse.origin.name, url: charResponse.origin.url),
-            location: CharLocation(name: charResponse.location.name, url: charResponse.location.url),
-            image: charResponse.image,
-            episode: charResponse.episode,
-            url: charResponse.url,
-            created: charResponse.created
-        )
+    func getMultipleCharacters(ids: [Int]) async throws -> [Char] {
+        let charResponse = try await request(endpoint: Endpoint.multipleCharacters(ids: ids), type: [CharResponse.ResultChar].self)
+
+        let characters = charResponse.map { chars in
+            Char(
+                id: chars.id,
+                name: chars.name,
+                status: chars.status,
+                species: chars.species,
+                type: chars.type,
+                gender: chars.gender,
+                origin: CharLocation(name: chars.origin.name, url: chars.origin.url),
+                location: CharLocation(name: chars.location.name, url: chars.location.url),
+                image: chars.image,
+                episode: chars.episode,
+                url: chars.url,
+                created: chars.created
+            )
+        }
+        return characters
     }
     
     func getCharacters(page: Int) async throws -> CharsPage {
