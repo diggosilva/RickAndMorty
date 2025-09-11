@@ -26,4 +26,13 @@ final class DSViewBuilder {
         view.backgroundColor = .systemGray4
         return view
     }
+    
+    static func buildContainerViewToLocationCell() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .secondarySystemBackground
+        view.layer.cornerRadius = 12
+        view.layer.masksToBounds = true
+        return view
+    }
 }

@@ -12,15 +12,7 @@ class LocationCell: UITableViewCell {
     
     static let identifier = "LocationCell"
     
-    lazy var containerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .secondarySystemBackground
-        view.layer.cornerRadius = 12
-        view.layer.masksToBounds = true
-        return view
-    }()
-    
+    lazy var containerView = DSViewBuilder.buildContainerViewToLocationCell()
     lazy var nameLabel = DSViewBuilder.buildLabel(font: .preferredFont(forTextStyle: .headline))
     lazy var typeLabel = DSViewBuilder.buildLabel(font: .preferredFont(forTextStyle: .subheadline))
     lazy var dimensionLabel = DSViewBuilder.buildLabel(font: .preferredFont(forTextStyle: .subheadline))
