@@ -56,6 +56,11 @@ class LocationViewModel {
             do {
                 let newLocations = try await service.getLocations(page: page)
                 locations.append(contentsOf: newLocations.locations)
+                
+                for location in newLocations.locations {
+                    let characterIDs = extractCharacterIDs(from: location.residents)
+                    print("IDs DOS PERSONAGENS: \(characterIDs)")
+                }
                 state = .loaded
                 page += 1
                 hasMorePages = newLocations.hasMorePages
@@ -64,5 +69,9 @@ class LocationViewModel {
             }
             isLoading = false
         }
+    }
+    
+    private func extractCharacterIDs(from urls: [String]) -> [Int] {
+        return urls.compactMap { Int($0.split(separator: "/").last ?? "") }
     }
 }
