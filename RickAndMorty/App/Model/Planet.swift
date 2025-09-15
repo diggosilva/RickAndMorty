@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Location: Codable {
+struct Planet: Codable {
     let id: Int
     let name: String
     let type: String
@@ -15,4 +15,14 @@ struct Location: Codable {
     let residents: [String]
     let url: String
     let created: String
+    
+    func residentsIDs() -> [Int] {
+        var ids: [Int] = []
+        
+        for resident in residents {
+            ids.append(Int(resident.split(separator: "/").last ?? "") ?? 0)
+        }
+        
+        return ids
+    }
 }

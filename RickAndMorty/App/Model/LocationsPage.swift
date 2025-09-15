@@ -8,6 +8,6 @@
 import Foundation
 
 struct LocationsPage {
-    let locations: [Location]
+    let locations: [Planet]
     let hasMorePages: Bool
 }
