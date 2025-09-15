@@ -95,7 +95,7 @@ class LocationCell: UITableViewCell {
     var residents: [Resident] = []
     let viewModel = LocationViewModel()
     
-    func configure(with location: Location, residents: [Resident]) {
+    func configure(with location: Planet, residents: [Resident]) {
         nameLabel.text = location.name
         typeLabel.text = location.type + " • " + location.dimension
         self.residents = residents

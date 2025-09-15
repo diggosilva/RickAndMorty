@@ -16,13 +16,13 @@ enum LocationViewControllerStates {
 
 protocol LocationViewModelProtocol: StatefulViewModel where State == LocationViewControllerStates {
     func numberOfRows() -> Int
-    func location(at indexPath: IndexPath) -> Location
+    func location(at indexPath: IndexPath) -> Planet
     func fetchLocations()
 }
 
 class LocationViewModel {
     
-    private var locations: [Location] = []
+    private var locations: [Planet] = []
     private var page: Int = 1
     private var isLoading: Bool = false
     private var hasMorePages: Bool = true
@@ -44,7 +44,7 @@ class LocationViewModel {
         return locations.count
     }
     
-    func location(at indexPath: IndexPath) -> Location {
+    func location(at indexPath: IndexPath) -> Planet {
         return locations[indexPath.row]
     }
     
@@ -58,10 +58,17 @@ class LocationViewModel {
                 let newLocations = try await service.getLocations(page: page)
                 locations.append(contentsOf: newLocations.locations)
                 
+                var ids: [Int] = []
+                
                 for location in newLocations.locations {
-                    let characterIDs = extractCharacterIDs(from: location.residents)
-                    print("IDs DOS PERSONAGENS: \(characterIDs)")
+                    ids.append(contentsOf: location.residentsIDs())
                 }
+                
+                let residents = try await service.getMultipleCharacters(ids: ids)
+                
+                print(residents)
+                
+                
                 state = .loaded
                 page += 1
                 hasMorePages = newLocations.hasMorePages
@@ -70,9 +77,5 @@ class LocationViewModel {
             }
             isLoading = false
         }
-    }
-    
-    private func extractCharacterIDs(from urls: [String]) -> [Int] {
-        return urls.compactMap { Int($0.split(separator: "/").last ?? "") }
     }
 }
