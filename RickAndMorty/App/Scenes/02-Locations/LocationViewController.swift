@@ -71,8 +71,7 @@ extension LocationViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: LocationCell.identifier, for: indexPath) as? LocationCell else { return UITableViewCell() }
-        let residents: [Resident] = []
-        cell.configure(with: viewModel.location(at: indexPath), residents: residents)
+        cell.configure(with: viewModel.location(at: indexPath))
         return cell
     }
 }
