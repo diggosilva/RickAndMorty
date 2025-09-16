@@ -38,7 +38,7 @@ class LocationViewController: UIViewController {
                 }
             }.store(in: &cancellables)
     }
-    
+
     private func showLoadingState() {
         locationView.spinner.startAnimating()
     }
