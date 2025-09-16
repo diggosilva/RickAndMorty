@@ -46,8 +46,8 @@ class ResidentCell: UICollectionViewCell {
         ])
     }
     
-    func configure(with resident: Resident) {
-        guard let url = URL(string: resident.imageURL) else { return }
+    func configure(with char: Char) {
+        guard let url = URL(string: char.image) else { return }
         avatarImageView.sd_setImage(with: url)
     }
 }
