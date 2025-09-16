@@ -16,13 +16,13 @@ enum LocationViewControllerStates {
 
 protocol LocationViewModelProtocol: StatefulViewModel where State == LocationViewControllerStates {
     func numberOfRows() -> Int
-    func location(at indexPath: IndexPath) -> Planet
+    func location(at indexPath: IndexPath) -> LocationChar
     func fetchLocations()
 }
 
 class LocationViewModel {
     
-    private var locations: [Planet] = []
+    private var locationsChar: [LocationChar] = []
     private var page: Int = 1
     private var isLoading: Bool = false
     private var hasMorePages: Bool = true
@@ -41,11 +41,11 @@ class LocationViewModel {
     }
     
     func numberOfRows() -> Int {
-        return locations.count
+        return locationsChar.count
     }
     
-    func location(at indexPath: IndexPath) -> Planet {
-        return locations[indexPath.row]
+    func location(at indexPath: IndexPath) -> LocationChar {
+        return locationsChar[indexPath.row]
     }
     
     func fetchLocations() {
@@ -56,8 +56,6 @@ class LocationViewModel {
         Task { @MainActor in
             do {
                 let newLocations = try await service.getLocations(page: page)
-                locations.append(contentsOf: newLocations.locations)
-                
                 var ids: [Int] = []
                 
                 for location in newLocations.locations {
@@ -66,9 +64,16 @@ class LocationViewModel {
                 
                 let residents = try await service.getMultipleCharacters(ids: ids)
                 
-                print(residents)
-                
-                
+                for location in newLocations.locations {
+                    var chars: [Char] = []
+                    
+                    for resident in residents {
+                        if location.residentsIDs().contains(resident.id) {
+                            chars.append(resident)
+                        }
+                    }
+                    locationsChar.append(LocationChar(location: location, chars: chars))
+                }
                 state = .loaded
                 page += 1
                 hasMorePages = newLocations.hasMorePages

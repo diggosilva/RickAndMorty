@@ -64,7 +64,7 @@ final class Service: ServiceProtocol {
         let locationResponse = try await request(endpoint: Endpoint.pagedLocations(page: page), type: LocationResponse.self)
         
         let locations = locationResponse.results.map { locations in
-            Planet(
+            Location(
                 id: locations.id,
                 name: locations.name,
                 type: locations.type,

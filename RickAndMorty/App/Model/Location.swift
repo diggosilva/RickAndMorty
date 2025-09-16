@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Planet: Codable {
+struct Location: Codable {
     let id: Int
     let name: String
     let type: String
@@ -25,4 +25,9 @@ struct Planet: Codable {
         
         return ids
     }
+}
+
+struct LocationChar {
+    let location: Location
+    let chars: [Char]
 }

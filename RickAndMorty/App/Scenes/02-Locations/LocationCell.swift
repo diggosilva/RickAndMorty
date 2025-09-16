@@ -22,7 +22,7 @@ class LocationCell: UITableViewCell {
     lazy var collectionView: UICollectionView = {
         var layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.minimumInteritemSpacing = 10
+        layout.minimumLineSpacing = 16
         layout.itemSize = CGSize(width: 80, height: 80)
         layout.sectionInset = .init(top: 0, left: 16, bottom: 0, right: 16)
         
@@ -30,8 +30,7 @@ class LocationCell: UITableViewCell {
         cv.translatesAutoresizingMaskIntoConstraints = false
         cv.showsHorizontalScrollIndicator = false
         cv.register(ResidentCell.self, forCellWithReuseIdentifier: ResidentCell.identifier)
-        cv.backgroundColor = .systemRed
-        cv.layer.cornerRadius = 8
+        cv.backgroundColor = .clear
         return cv
     }()
     
@@ -85,20 +84,20 @@ class LocationCell: UITableViewCell {
             residentLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
             
             collectionView.topAnchor.constraint(equalTo: residentLabel.bottomAnchor, constant: padding / 2),
-            collectionView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 1),
+            collectionView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -1),
             collectionView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -padding),
             collectionView.heightAnchor.constraint(equalToConstant: 80),
         ])
     }
     
-    var residents: [Resident] = []
+    var residents: [Char] = []
     let viewModel = LocationViewModel()
     
-    func configure(with location: Planet, residents: [Resident]) {
-        nameLabel.text = location.name
-        typeLabel.text = location.type + " • " + location.dimension
-        self.residents = residents
+    func configure(with locationChar: LocationChar) {
+        nameLabel.text = locationChar.location.name
+        typeLabel.text = locationChar.location.type + " • " + locationChar.location.dimension
+        self.residents = locationChar.chars
         collectionView.reloadData()
     }
 }
