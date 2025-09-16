@@ -15,4 +15,19 @@ struct Location: Codable {
     let residents: [String]
     let url: String
     let created: String
+    
+    func residentsIDs() -> [Int] {
+        var ids: [Int] = []
+        
+        for resident in residents {
+            ids.append(Int(resident.split(separator: "/").last ?? "") ?? 0)
+        }
+        
+        return ids
+    }
+}
+
+struct LocationChar {
+    let location: Location
+    let chars: [Char]
 }
