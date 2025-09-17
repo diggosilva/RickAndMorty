@@ -54,7 +54,7 @@ extension DetailsViewController: UICollectionViewDataSource, UICollectionViewDel
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: InfoCell.identifier, for: indexPath) as? InfoCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DetailsCellCollection.identifier, for: indexPath) as? DetailsCellCollection else {
             return UICollectionViewCell()
         }
         
