@@ -1,5 +1,5 @@
 //
-//  InfoCell.swift
+//  DetailsCellCollection.swift
 //  RickAndMorty
 //
 //  Created by Diggo Silva on 28/08/25.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class InfoCell: UICollectionViewCell {
+class DetailsCellCollection: UICollectionViewCell {
     
     static let identifier = "InfoCell"
     
