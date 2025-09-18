@@ -17,7 +17,7 @@ struct Char: Codable, Hashable {
     let origin: CharLocation
     let location: CharLocation
     let image: String
-    let episode: [String]
+    let episodes: [String]
     let url: String
     let created: String
     
@@ -31,9 +31,18 @@ struct Char: Codable, Hashable {
         lhs.origin == rhs.origin &&
         lhs.location == rhs.location &&
         lhs.image == rhs.image &&
-        lhs.episode == rhs.episode &&
+        lhs.episodes == rhs.episodes &&
         lhs.url == rhs.url &&
         lhs.created == rhs.created
+    }
+    
+    func episodeIDs() -> [Int] {
+        var ids: [Int] = []
+        
+        for episode in episodes {
+            ids.append(Int(episode.split(separator: "/").last ?? "") ?? 0)
+        }
+        return ids
     }
 }
 
