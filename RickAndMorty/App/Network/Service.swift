@@ -11,6 +11,7 @@ protocol ServiceProtocol {
     func getMultipleCharacters(ids: [Int]) async throws -> [Char]
     func getCharacters(page: Int) async throws -> CharsPage
     func getLocations(page: Int) async throws -> LocationsPage
+    func getMultipleEpisodes(ids: [Int]) async throws -> [Episode]
     func getEpisodes(page: Int) async throws -> EpisodesPage
 }
 
@@ -30,7 +31,7 @@ final class Service: ServiceProtocol {
                 origin: CharLocation(name: chars.origin.name, url: chars.origin.url),
                 location: CharLocation(name: chars.location.name, url: chars.location.url),
                 image: chars.image,
-                episode: chars.episode,
+                episodes: chars.episode,
                 url: chars.url,
                 created: chars.created
             )
@@ -52,7 +53,7 @@ final class Service: ServiceProtocol {
                 origin: CharLocation(name: chars.origin.name, url: chars.origin.url),
                 location: CharLocation(name: chars.location.name, url: chars.location.url),
                 image: chars.image,
-                episode: chars.episode,
+                episodes: chars.episode,
                 url: chars.url,
                 created: chars.created
             )
@@ -75,6 +76,43 @@ final class Service: ServiceProtocol {
             )
         }
         return LocationsPage(locations: locations, hasMorePages: locationResponse.info.next != nil)
+    }
+    
+    func getMultipleEpisodes(ids: [Int]) async -> [Episode] {
+        do {
+            if ids.count == 1 {
+                let episodeResponse = try await request(endpoint: Endpoint.multipleEpisodes(ids: ids), type: EpisodeResponse.ResultEpisode.self)
+                
+                let episode = Episode(
+                    id: episodeResponse.id,
+                    name: episodeResponse.name,
+                    airDate: episodeResponse.airDate,
+                    episode: episodeResponse.episode,
+                    characters: episodeResponse.characters,
+                    url: episodeResponse.url,
+                    created: episodeResponse.created
+                )
+                return [episode]
+            } else {
+                let episodeResponse = try await request(endpoint: Endpoint.multipleEpisodes(ids: ids), type: [EpisodeResponse.ResultEpisode].self)
+                
+                let episodes = episodeResponse.map { episode in
+                    Episode(
+                        id: episode.id,
+                        name: episode.name,
+                        airDate: episode.airDate,
+                        episode: episode.episode,
+                        characters: episode.characters,
+                        url: episode.url,
+                        created: episode.created
+                    )
+                }
+                return episodes
+            }
+        } catch {
+            print("Erro ao buscar episódios: \(error.localizedDescription)")
+            return []
+        }
     }
     
     func getEpisodes(page: Int) async throws -> EpisodesPage {

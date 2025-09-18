@@ -32,6 +32,7 @@ enum Endpoint: EndpointProtocol {
     case pagedEpisodes(page: Int)
     case pagedLocations(page: Int)
     case multipleCharacters(ids: [Int])
+    case multipleEpisodes(ids: [Int])
     
     var scheme: String {
         return "https"
@@ -55,6 +56,10 @@ enum Endpoint: EndpointProtocol {
         case .multipleCharacters(ids: let ids):
             let idsString = ids.map(String.init).joined(separator: ",")
             return "/api/character/\(idsString)"
+        
+        case .multipleEpisodes(ids: let ids):
+            let idsString = ids.map(String.init).joined(separator: ",")
+            return "/api/episode/\(idsString)"
         }
     }
     

@@ -6,12 +6,21 @@
 //
 
 import Foundation
+import Combine
 
-protocol DetailsViewModelProtocol {
+enum DetailsViewControllerStates {
+    case loading
+    case loaded
+    case error
+}
+
+protocol DetailsViewModelProtocol: StatefulViewModel where State == DetailsViewControllerStates {
     func numberOfInfoItems() -> Int
     func infoItem(at indexPath: IndexPath) -> (title: String, value: String)
     func numberOfRows() -> Int
-    func cellForRow(at indexPath: IndexPath) -> Int
+    func cellForRow(at indexPath: IndexPath) -> Episode
+    func fetchEpisodes()
+    
     var imageURL: String { get }
     var name: String { get }
 }
@@ -19,9 +28,17 @@ protocol DetailsViewModelProtocol {
 class DetailsViewModel: DetailsViewModelProtocol {
     
     private let char: Char
+    private let service: ServiceProtocol
     
-    init(char: Char) {
+    @Published private var state: DetailsViewControllerStates = .loading
+    
+    var statePublisher: AnyPublisher<DetailsViewControllerStates, Never> {
+        $state.eraseToAnyPublisher()
+    }
+    
+    init(char: Char, service: ServiceProtocol = Service()) {
         self.char = char
+        self.service = service
     }
     
     var name: String { return char.name }
@@ -47,17 +64,27 @@ class DetailsViewModel: DetailsViewModelProtocol {
     
     // MARK: - TableView (episódios)
     
-    var episodes: [Int] {
-        char.episode.compactMap { urlString in
-            return Int(urlString.split(separator: "/").last ?? "")
-        }
-    }
+    var episodes: [Episode] = []
     
     func numberOfRows() -> Int {
         return episodes.count
     }
     
-    func cellForRow(at indexPath: IndexPath) -> Int {
+    func cellForRow(at indexPath: IndexPath) -> Episode {
         return episodes[indexPath.row]
+    }
+    
+    func fetchEpisodes() {
+        state = .loading
+        
+        Task{ @MainActor in
+            do {
+                let episode = try await service.getMultipleEpisodes(ids: char.episodeIDs())
+                episodes.append(contentsOf: episode)
+                state = .loaded
+            } catch {
+                state = .error
+            }
+        }
     }
 }
