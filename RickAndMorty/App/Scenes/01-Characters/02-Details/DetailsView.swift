@@ -30,11 +30,21 @@ class DetailsView: UIView {
         return cv
     }()
     
+    lazy var inEpisodesLabel = DSViewBuilder.buildLabel(text: "NOS EPISÓDIOS", font: .preferredFont(forTextStyle: .subheadline))
+    
     lazy var episodesTableView: UITableView = {
         let tv = UITableView()
         tv.translatesAutoresizingMaskIntoConstraints = false
-        tv.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tv.separatorStyle = .none
+        tv.register(EpisodesCell.self, forCellReuseIdentifier: EpisodesCell.identifier)
         return tv
+    }()
+    
+    lazy var spinner: UIActivityIndicatorView = {
+        let spinner = UIActivityIndicatorView(style: .large)
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.color = .label
+        return spinner
     }()
     
     let statusLabel = UILabel()
@@ -55,7 +65,7 @@ class DetailsView: UIView {
     }
     
     private func setHierarchy() {
-        addSubviews(imageView, infoCollectionView, episodesTableView)
+        addSubviews(imageView, infoCollectionView, inEpisodesLabel, episodesTableView, spinner)
         backgroundColor = .systemBackground
     }
     
@@ -66,17 +76,24 @@ class DetailsView: UIView {
             imageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.4),
+            imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3),
             
             infoCollectionView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: padding),
             infoCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
             infoCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
             infoCollectionView.heightAnchor.constraint(equalToConstant: 160),
             
-            episodesTableView.topAnchor.constraint(equalTo: infoCollectionView.bottomAnchor, constant: padding),
+            inEpisodesLabel.topAnchor.constraint(equalTo: infoCollectionView.bottomAnchor, constant: padding),
+            inEpisodesLabel.leadingAnchor.constraint(equalTo: infoCollectionView.leadingAnchor),
+            inEpisodesLabel.trailingAnchor.constraint(equalTo: infoCollectionView.trailingAnchor),
+            
+            episodesTableView.topAnchor.constraint(equalTo: inEpisodesLabel.bottomAnchor),
             episodesTableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             episodesTableView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            episodesTableView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            episodesTableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
+            spinner.centerXAnchor.constraint(equalTo: episodesTableView.centerXAnchor),
+            spinner.centerYAnchor.constraint(equalTo: episodesTableView.centerYAnchor)
         ])
     }
     
