@@ -6,13 +6,15 @@
 //
 
 import UIKit
+import Combine
 
 class DetailsViewController: UIViewController {
     
     private let detailsView = DetailsView()
-    private let viewModel: DetailsViewModelProtocol
+    private let viewModel: any DetailsViewModelProtocol
+    private var cancellables = Set<AnyCancellable>()
     
-    init(viewModel: DetailsViewModelProtocol) {
+    init(viewModel: any DetailsViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -28,6 +30,36 @@ class DetailsViewController: UIViewController {
         setupDelegatesAndDataSources()
         configureViewData()
         setupNavBar()
+        handleStates()
+        viewModel.fetchEpisodes()
+    }
+    
+    private func handleStates() {
+        viewModel.statePublisher
+            .receive(on: RunLoop.main)
+            .sink { [weak self] state in
+                switch state {
+                case .loading: self?.showLoadingState()
+                case .loaded: self?.showLoadedState()
+                case .error: self?.showErrorState()
+                }
+            }.store(in: &cancellables)
+    }
+    
+    private func showLoadingState() {
+        print("CARREGANDO DADOS...")
+        detailsView.spinner.startAnimating()
+    }
+    
+    private func showLoadedState() {
+        print("CARREGAMENTO DE DADOS CONCLUÍDO!")
+        detailsView.spinner.stopAnimating()
+        detailsView.episodesTableView.reloadData()
+    }
+    
+    private func showErrorState() {
+        detailsView.spinner.stopAnimating()
+        showCustomAlert(title: "Ops!", message: "Ocorreu um erro ao carregar os Episódios na tela de Detalhes.", buttonTitle: "OK")
     }
     
     private func setupNavBar() {
@@ -69,11 +101,11 @@ extension DetailsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.numberOfRows()
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        let episodeId = viewModel.cellForRow(at: indexPath)
-        cell.textLabel?.text = "Episódio \(episodeId)"
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: EpisodesCell.identifier, for: indexPath) as? EpisodesCell else { return UITableViewCell() }
+        let episode = viewModel.cellForRow(at: indexPath)
+        cell.configure(episode: episode)
         return cell
     }
 }
