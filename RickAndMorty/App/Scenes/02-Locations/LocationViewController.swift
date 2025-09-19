@@ -71,6 +71,7 @@ extension LocationViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: LocationCell.identifier, for: indexPath) as? LocationCell else { return UITableViewCell() }
+        cell.delegate = self
         cell.configure(with: viewModel.location(at: indexPath))
         return cell
     }
@@ -85,5 +86,15 @@ extension LocationViewController: UITableViewDelegate {
         if indexPath.row == viewModel.numberOfRows() - 1 {
             viewModel.fetchLocations()
         }
+    }
+}
+
+extension LocationViewController: LocationCellDelegate {
+    func didSelectResident(_ cell: LocationCell, char: Char) {
+        let viewModel = DetailsViewModel(char: char)
+        let detailsVC = DetailsViewController(viewModel: viewModel)
+        detailsVC.navigationItem.title = char.name
+        let navController = UINavigationController(rootViewController: detailsVC)
+        present(navController, animated: true)
     }
 }

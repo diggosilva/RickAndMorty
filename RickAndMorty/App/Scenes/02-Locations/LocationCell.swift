@@ -8,6 +8,10 @@
 import UIKit
 import SDWebImage
 
+protocol LocationCellDelegate: AnyObject {
+    func didSelectResident(_ cell: LocationCell, char: Char)
+}
+
 class LocationCell: UITableViewCell {
     
     static let identifier = "LocationCell"
@@ -33,6 +37,8 @@ class LocationCell: UITableViewCell {
         cv.backgroundColor = .clear
         return cv
     }()
+    
+    weak var delegate: LocationCellDelegate?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -102,7 +108,7 @@ class LocationCell: UITableViewCell {
     }
 }
 
-extension LocationCell: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension LocationCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return residents.count
@@ -117,5 +123,12 @@ extension LocationCell: UICollectionViewDataSource, UICollectionViewDelegateFlow
         
         cell.configure(with: resident)
         return cell
+    }
+}
+
+extension LocationCell: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let char = residents[indexPath.item]
+        delegate?.didSelectResident(self, char: char)
     }
 }
