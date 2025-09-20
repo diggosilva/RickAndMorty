@@ -14,13 +14,13 @@ enum EpisodesViewControllerStates {
     case error
 }
 
-protocol EpisodeViewModel: StatefulViewModel where State == EpisodesViewControllerStates {
+protocol EpisodeViewModelProtocol: StatefulViewModel where State == EpisodesViewControllerStates {
     func numberOfRows() -> Int
     func episode(at indexPath: IndexPath) -> Episode
     func fetchEpisodes()
 }
 
-class EpisodesViewModel: EpisodeViewModel {
+class EpisodesViewModel: EpisodeViewModelProtocol {
     
     private var episodes: [Episode] = []
     private let service: ServiceProtocol
