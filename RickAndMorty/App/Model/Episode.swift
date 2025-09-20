@@ -23,8 +23,3 @@ struct Episode: Codable {
         return ids
     }
 }
-
-struct EpisodeChar {
-    let episode: Episode
-    let chars: [Char]
-}
