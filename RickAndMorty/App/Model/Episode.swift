@@ -13,4 +13,13 @@ struct Episode: Codable {
     let characters: [String]
     let url: String
     let created: String
+    
+    func charactersIDs() -> [Int] {
+        var ids: [Int] = []
+        
+        for character in characters {
+            ids.append(Int(character.split(separator: "/").last ?? "") ?? 0)
+        }
+        return ids
+    }
 }
