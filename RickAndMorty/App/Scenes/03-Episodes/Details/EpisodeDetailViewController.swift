@@ -28,14 +28,9 @@ class EpisodeDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupNavigationBar()
         setupAndDataSources()
         handleStates()
         viewModel.fetchCharactersInEpisode()
-    }
-    
-    private func setupNavigationBar() {
-        navigationItem.title = "Episode Detail"
     }
     
     private func setupAndDataSources() {
@@ -56,33 +51,28 @@ class EpisodeDetailViewController: UIViewController {
     }
     
     private func showLoadingState() {
-        print("⚠️ CARREGANDO PERSONAGENS DO EPISÓDIO...")
+        episodeDetailView.spinner.startAnimating()
     }
     
     private func showLoadedState() {
-        print("🟢 CARREGADO PERSONAGENS DO EPISÓDIO...")
+        episodeDetailView.spinner.stopAnimating()
         episodeDetailView.tableView.reloadData()
     }
     
     private func showErrorState() {
-        
+        showCustomAlert(title: "Ops!", message: "Não foi possível carregar os personagens deste episódio.", buttonTitle: "OK")
     }
 }
 
 extension EpisodeDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return viewModel.numberOfRows()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        
-        var content = cell.defaultContentConfiguration()
-        content.text = "Personagem \(indexPath.row + 1)"
-        content.secondaryText = "Descrição"
-        content.image = UIImage(systemName: "person.fill")
-        
-        cell.contentConfiguration = content
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: EpisodeDetailCell.identifier, for: indexPath) as? EpisodeDetailCell else { return UITableViewCell() }
+        let char = viewModel.characterInEpisode(at: indexPath)
+        cell.configure(char: char)
         return cell
     }
 }
