@@ -10,15 +10,16 @@ import UIKit
 final class EpisodeDetailView: UIView {
     
     lazy var tableView: UITableView = {
-        let tv = UITableView()
+        let tv = UITableView(frame: .zero, style: .insetGrouped)
         tv.translatesAutoresizingMaskIntoConstraints = false
-        tv.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tv.register(EpisodeDetailCell.self, forCellReuseIdentifier: EpisodeDetailCell.identifier)
         return tv
     }()
     
     lazy var spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
         spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.color = .label
         return spinner
     }()
     
