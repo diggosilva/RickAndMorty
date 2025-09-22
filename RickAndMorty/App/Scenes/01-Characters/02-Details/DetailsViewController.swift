@@ -97,7 +97,7 @@ extension DetailsViewController: UICollectionViewDataSource, UICollectionViewDel
     }
 }
 
-extension DetailsViewController: UITableViewDataSource, UITableViewDelegate {
+extension DetailsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.numberOfRows()
     }
@@ -107,5 +107,16 @@ extension DetailsViewController: UITableViewDataSource, UITableViewDelegate {
         let episode = viewModel.cellForRow(at: indexPath)
         cell.configure(episode: episode)
         return cell
+    }
+}
+
+extension DetailsViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let episode = viewModel.cellForRow(at: indexPath)
+        let viewModel = EpisodeDetailViewModel(episode: episode)
+        let episodeDetailVC = EpisodeDetailViewController(viewModel: viewModel)
+        episodeDetailVC.navigationItem.title = episode.name
+        navigationController?.pushViewController(episodeDetailVC, animated: true)
     }
 }
