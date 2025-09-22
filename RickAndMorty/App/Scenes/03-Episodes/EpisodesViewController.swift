@@ -84,6 +84,7 @@ extension EpisodesViewController: UITableViewDelegate {
         let episode = viewModel.episode(at: indexPath)
         let viewModel = EpisodeDetailViewModel(episode: episode)
         let episodesDetailVC = EpisodeDetailViewController(viewModel: viewModel)
+        episodesDetailVC.navigationItem.title = episode.name
         navigationController?.pushViewController(episodesDetailVC, animated: true)
     }
     
