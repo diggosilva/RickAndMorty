@@ -60,7 +60,9 @@ class EpisodeDetailViewController: UIViewController {
     }
     
     private func showErrorState() {
-        showCustomAlert(title: "Ops!", message: "Não foi possível carregar os personagens deste episódio.", buttonTitle: "OK")
+        showCustomAlert(title: "Ops!", message: "Não foi possível carregar os personagens deste episódio.", buttonTitle: "OK") {
+            self.episodeDetailView.spinner.stopAnimating()
+        }
     }
 }
 

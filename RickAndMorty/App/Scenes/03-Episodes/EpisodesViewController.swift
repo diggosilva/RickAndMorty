@@ -52,7 +52,9 @@ class EpisodesViewController: UIViewController {
     }
     
     private func showErrorState() {
-        showCustomAlert(title: "Erro!", message: "Não foi possível carregar os episódios.", buttonTitle: "OK")
+        showCustomAlert(title: "Erro!", message: "Não foi possível carregar os episódios.", buttonTitle: "OK") {
+            self.episodesView.spinner.stopAnimating()
+        }
     }
     
     private func setupNavigationBar() {

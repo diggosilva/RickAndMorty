@@ -15,7 +15,6 @@ enum EpisodeDetailViewControllerState {
 }
 
 protocol EpisodeDetailViewModelProtocol: StatefulViewModel where State == EpisodeDetailViewControllerState {
-    var characters: [Char] { get }
     func fetchCharactersInEpisode()
     func numberOfRows() -> Int
     func characterInEpisode(at indexPath: IndexPath) -> Char
@@ -28,8 +27,8 @@ final class EpisodeDetailViewModel: EpisodeDetailViewModelProtocol {
     var statePublisher: AnyPublisher<EpisodeDetailViewControllerState, Never> {
         $state.eraseToAnyPublisher()
     }
-    private(set) var characters: [Char] = [] // VERIFICAR SE DER ERRO NO PRIVATE(SET)
     
+    private(set) var characters: [Char] = []
     private let service: ServiceProtocol
     private let episode: Episode
     

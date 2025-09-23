@@ -47,19 +47,18 @@ class DetailsViewController: UIViewController {
     }
     
     private func showLoadingState() {
-        print("CARREGANDO DADOS...")
         detailsView.spinner.startAnimating()
     }
     
     private func showLoadedState() {
-        print("CARREGAMENTO DE DADOS CONCLUÍDO!")
         detailsView.spinner.stopAnimating()
         detailsView.episodesTableView.reloadData()
     }
     
     private func showErrorState() {
-        detailsView.spinner.stopAnimating()
-        showCustomAlert(title: "Ops!", message: "Ocorreu um erro ao carregar os Episódios na tela de Detalhes.", buttonTitle: "OK")
+        showCustomAlert(title: "Ops!", message: "Ocorreu um erro ao carregar os Episódios na tela de Detalhes.", buttonTitle: "OK") {
+            self.detailsView.spinner.stopAnimating()
+        }
     }
     
     private func setupNavBar() {

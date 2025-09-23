@@ -26,7 +26,6 @@ class LocationViewModel {
     private var page: Int = 1
     private var isLoading: Bool = false
     private var hasMorePages: Bool = true
-    private var residentsByLocation: [Int : [Resident]] = [:]
     
     @Published private var state: LocationViewControllerStates = .loading
     
