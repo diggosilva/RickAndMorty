@@ -78,5 +78,13 @@ extension EpisodeDetailViewController: UITableViewDataSource {
 }
 
 extension EpisodeDetailViewController: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let char = viewModel.characterInEpisode(at: indexPath)
+        let viewModel = DetailsViewModel(char: char)
+        let detailsVC = DetailsViewController(viewModel: viewModel)
+        let navController = UINavigationController(rootViewController: detailsVC)
+        navController.navigationItem.title = char.name
+        present(navController, animated: true)
+    }
 }
