@@ -50,27 +50,28 @@ final class EpisodeDetailCell: UITableViewCell {
     }
     
     private func setHierarchy() {
-        addSubviews(charImageView, nameLabel, statusLabel)
+        contentView.addSubview(charImageView)
+        contentView.addSubview(nameLabel)
+        contentView.addSubview(statusLabel)
     }
     
     private func setConstraints() {
         let padding: CGFloat = 8
         
         NSLayoutConstraint.activate([
-            charImageView.topAnchor.constraint(equalTo: topAnchor, constant: padding),
-            charImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
-            charImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            charImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
+            charImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             charImageView.widthAnchor.constraint(equalToConstant: 40),
             charImageView.heightAnchor.constraint(equalTo: charImageView.widthAnchor),
-            charImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding),
             
-            nameLabel.topAnchor.constraint(equalTo: charImageView.topAnchor),
+            nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
             nameLabel.leadingAnchor.constraint(equalTo: charImageView.trailingAnchor, constant: padding),
-            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
-            
-            statusLabel.leadingAnchor.constraint(equalTo: charImageView.trailingAnchor, constant: padding),
-            statusLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
-            statusLabel.bottomAnchor.constraint(equalTo: charImageView.bottomAnchor),
+            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
+
+            statusLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: padding / 2),
+            statusLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            statusLabel.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
+            statusLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -padding)
         ])
     }
     
