@@ -80,5 +80,6 @@ final class EpisodeDetailCell: UITableViewCell {
         charImageView.sd_setImage(with: url)
         nameLabel.text = char.name
         statusLabel.text = char.status
+        self.accessoryType = .disclosureIndicator
     }
 }

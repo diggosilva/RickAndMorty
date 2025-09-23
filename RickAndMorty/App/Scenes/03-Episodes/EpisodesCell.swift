@@ -89,5 +89,6 @@ class EpisodesCell: UITableViewCell {
         
         let borderColor = seasonColors[seasonPrefix] ?? .systemOrange
         stackView.layer.borderColor = borderColor.cgColor
+        self.accessoryType = .disclosureIndicator
     }
 }

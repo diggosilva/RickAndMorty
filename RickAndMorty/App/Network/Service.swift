@@ -110,7 +110,7 @@ final class Service: ServiceProtocol {
                 return episodes
             }
         } catch {
-            print("Erro ao buscar episódios: \(error.localizedDescription)")
+//            print("Erro ao buscar episódios: \(error.localizedDescription)")
             return []
         }
     }
@@ -140,7 +140,7 @@ final class Service: ServiceProtocol {
         let (data, response) = try await URLSession.shared.data(from: url)
         
         if let httpResponse = response as? HTTPURLResponse {
-            print("DEBUG: Statuscode.. \(httpResponse.statusCode)")
+//            print("DEBUG: Statuscode.. \(httpResponse.statusCode)")
         }
         
         let decodedData = try JSONDecoder().decode(T.self, from: data)
