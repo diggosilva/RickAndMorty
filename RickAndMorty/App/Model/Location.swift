@@ -22,7 +22,6 @@ struct Location: Codable {
         for resident in residents {
             ids.append(Int(resident.split(separator: "/").last ?? "") ?? 0)
         }
-        
         return ids
     }
 }
