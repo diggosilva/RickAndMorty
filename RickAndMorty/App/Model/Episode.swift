@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct Episode: Codable {
     let id: Int
@@ -21,5 +22,14 @@ struct Episode: Codable {
             ids.append(Int(character.split(separator: "/").last ?? "") ?? 0)
         }
         return ids
+    }
+    
+    func setColorInEpisodeCell() -> UIColor {
+        if let seasonPrefix = Int(String(episode.prefix(3)).suffix(2)) {
+            if seasonPrefix.isMultiple(of: 2) {
+                return UIColor.systemOrange
+            }
+        }
+        return UIColor.systemGreen
     }
 }
