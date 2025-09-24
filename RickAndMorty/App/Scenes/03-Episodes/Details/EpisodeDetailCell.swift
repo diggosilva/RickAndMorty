@@ -21,21 +21,8 @@ final class EpisodeDetailCell: UITableViewCell {
         return imageView
     }()
     
-    lazy var nameLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.preferredFont(forTextStyle: .headline)
-        label.textColor = .label
-        return label
-    }()
-   
-    lazy var statusLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        label.textColor = .label
-        return label
-    }()
+    lazy var nameLabel = DSViewBuilder.buildLabel(font: .preferredFont(forTextStyle: .headline))
+    lazy var statusLabel = DSViewBuilder.buildLabel(font: .preferredFont(forTextStyle: .subheadline))
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

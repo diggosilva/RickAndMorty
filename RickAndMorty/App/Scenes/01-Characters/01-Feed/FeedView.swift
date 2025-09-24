@@ -31,12 +31,7 @@ class FeedView: UIView {
         return cv
     }()
     
-    lazy var spinner: UIActivityIndicatorView = {
-        let spinner = UIActivityIndicatorView(style: .large)
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        spinner.color = .label
-        return spinner
-    }()
+    lazy var spinner = DSViewBuilder.buildSpinner()
     
     var dataSource: UICollectionViewDiffableDataSource<Section, Char>!
     

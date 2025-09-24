@@ -22,24 +22,9 @@ class FeedCell: UICollectionViewCell {
         return iv
     }()
     
-    lazy var nameLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.translatesAutoresizingMaskIntoConstraints = false
-        lbl.font = .systemFont(ofSize: 14, weight: .semibold)
-        lbl.textAlignment = .center
-        lbl.adjustsFontSizeToFitWidth = true
-        lbl.minimumScaleFactor = 0.5
-        return lbl
-    }()
-    
-    lazy var statusLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.translatesAutoresizingMaskIntoConstraints = false
-        lbl.font = .systemFont(ofSize: 10, weight: .regular)
-        lbl.textAlignment = .center
-        return lbl
-    }()
-    
+    lazy var nameLabel = DSViewBuilder.buildLabel(textAlignment: .center, font: .systemFont(ofSize: 14, weight: .semibold), minimumScaleFactor: 0.5)
+    lazy var statusLabel = DSViewBuilder.buildLabel(textAlignment: .center, font: .systemFont(ofSize: 10, weight: .regular))
+        
     override init(frame: CGRect) {
         super.init(frame: .zero)
         setupView()
