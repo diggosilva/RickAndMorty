@@ -17,12 +17,7 @@ class LocationView: UIView {
         return tv
     }()
     
-    lazy var spinner: UIActivityIndicatorView = {
-        let spinner = UIActivityIndicatorView(style: .large)
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        spinner.color = .label
-        return spinner
-    }()
+    lazy var spinner = DSViewBuilder.buildSpinner()
     
     override init(frame: CGRect) {
         super.init(frame: .zero)

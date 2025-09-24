@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class DetailsView: UIView {
     
@@ -40,17 +41,7 @@ class DetailsView: UIView {
         return tv
     }()
     
-    lazy var spinner: UIActivityIndicatorView = {
-        let spinner = UIActivityIndicatorView(style: .large)
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        spinner.color = .label
-        return spinner
-    }()
-    
-    let statusLabel = UILabel()
-    let speciesLabel = UILabel()
-    let genderLabel = UILabel()
-    let originLabel = UILabel()
+    lazy var spinner = DSViewBuilder.buildSpinner()
         
     override init(frame: CGRect) {
         super.init(frame: .zero)

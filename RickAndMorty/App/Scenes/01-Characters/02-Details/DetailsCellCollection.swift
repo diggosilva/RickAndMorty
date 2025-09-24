@@ -11,24 +11,8 @@ class DetailsCellCollection: UICollectionViewCell {
     
     static let identifier = "InfoCell"
     
-    lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .boldSystemFont(ofSize: 16)
-        label.textAlignment = .center
-        return label
-    }()
-    
-    lazy var valueLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 14)
-        label.textAlignment = .center
-        label.numberOfLines = 2
-        label.adjustsFontSizeToFitWidth = true
-        label.minimumScaleFactor = 0.6
-        return label
-    }()
+    lazy var titleLabel = DSViewBuilder.buildLabel(textAlignment: .center, font: .boldSystemFont(ofSize: 16))    
+    lazy var valueLabel = DSViewBuilder.buildLabel(textAlignment: .center, font: .systemFont(ofSize: 14), numberOfLines: 2, minimumScaleFactor: 0.6)
     
     lazy var stack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [titleLabel, valueLabel])

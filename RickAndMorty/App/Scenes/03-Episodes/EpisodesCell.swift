@@ -11,27 +11,9 @@ class EpisodesCell: UITableViewCell {
     
     static let identifier = "EpisodesCell"
     
-    lazy var seasonEpisodeLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .headline)
-        return label
-    }()
-    
-    lazy var episodeTitleLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .body)
-        return label
-    }()
-    
-    lazy var airDateLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .footnote)
-        label.textColor = .secondaryLabel
-        return label
-    }()
+    lazy var seasonEpisodeLabel = DSViewBuilder.buildLabel(font: .preferredFont(forTextStyle: .headline))
+    lazy var episodeTitleLabel = DSViewBuilder.buildLabel(font: .preferredFont(forTextStyle: .body))
+    lazy var airDateLabel = DSViewBuilder.buildLabel(textColor: .secondaryLabel, font: .preferredFont(forTextStyle: .footnote))
     
     lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [seasonEpisodeLabel, episodeTitleLabel, airDateLabel])
