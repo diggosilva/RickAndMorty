@@ -41,8 +41,6 @@ class EpisodesCell: UITableViewCell {
         stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
         stackView.spacing = 4
         stackView.layer.cornerRadius = 8
-        stackView.layer.borderWidth = 2
-        stackView.layer.borderColor = UIColor.systemBlue.cgColor
         return stackView
     }()
     
@@ -72,23 +70,13 @@ class EpisodesCell: UITableViewCell {
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding),
         ])
     }
-    
-    private let seasonColors: [String : UIColor] = [
-        "S01" : .systemIndigo,
-        "S02" : .systemMint,
-        "S03" : .systemPink,
-        "S04" : .systemGreen
-    ]
         
     func configure(episode: Episode) {
         seasonEpisodeLabel.text = "Episode: \(episode.episode)"
         episodeTitleLabel.text = episode.name
         airDateLabel.text = "Aired on: \(episode.airDate)"
         
-        let seasonPrefix = String(episode.episode.prefix(3))
-        
-        let borderColor = seasonColors[seasonPrefix] ?? .systemOrange
-        stackView.layer.borderColor = borderColor.cgColor
+        stackView.backgroundColor = episode.setColorInEpisodeCell().withAlphaComponent(0.5)
         self.accessoryType = .disclosureIndicator
     }
 }
