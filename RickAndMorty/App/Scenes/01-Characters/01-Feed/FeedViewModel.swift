@@ -62,8 +62,7 @@ class FeedViewModel: FeedViewModelProtocol {
             filteredChars = chars
         } else {
             filteredChars = chars.filter {
-                $0.name.lowercased().contains(searchText.lowercased()) ||
-                translateStatus($0.status).contains(searchText.lowercased())
+                $0.name.lowercased().contains(searchText.lowercased()) || $0.status.lowercased().contains(searchText.lowercased())
             }
         }
     }
@@ -89,15 +88,6 @@ class FeedViewModel: FeedViewModelProtocol {
                 state = .error
             }
             isLoading = false
-        }
-    }
-    
-    private func translateStatus(_ englishStatus: String) -> String {
-        switch englishStatus.lowercased() {
-        case "alive": return "vivo"
-        case "dead": return "morto"
-        case "unknown": return "desconhecido"
-        default: return englishStatus.lowercased()
         }
     }
 }
