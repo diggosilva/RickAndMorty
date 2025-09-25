@@ -66,7 +66,7 @@ class FeedCell: UICollectionViewCell {
         guard let url = URL(string: char.image) else { return }
         photoImageView.sd_setImage(with: url)
         nameLabel.attributedText = highlightedText(fullText: char.name, highlight: searchText)
-        statusLabel.text = getStatusChar(char: char)
+        statusLabel.text = char.getStatusChar()
     }
     
     private func highlightedText(fullText: String, highlight: String) -> NSAttributedString {
@@ -80,15 +80,5 @@ class FeedCell: UICollectionViewCell {
             }
         }
         return attributedText
-    }
-    
-    private func getStatusChar(char: Char) -> String {
-        if char.status == "Alive" {
-            return "🟢 Vivo"
-        } else if char.status == "Dead" {
-            return "🔴 Morto"
-        } else {
-            return "🟡 Desconhecido"
-        }
     }
 }

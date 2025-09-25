@@ -44,6 +44,15 @@ struct Char: Codable, Hashable {
         }
         return ids
     }
+    
+    func getStatusChar() -> String {
+        if status == "Dead" {
+            return "🔴 Dead"
+        } else if status == "Alive" {
+            return "🟢 Alive"
+        }
+        return "🟡 Unknown"
+    }
 }
 
 struct CharLocation: Codable, Equatable, Hashable {
