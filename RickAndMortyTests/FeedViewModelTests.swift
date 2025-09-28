@@ -9,7 +9,7 @@ import XCTest
 import Combine
 @testable import RickAndMorty
 
-final class RickAndMortyTests: XCTestCase {
+final class FeedViewModelTests: XCTestCase {
     
     var cancellables = Set<AnyCancellable>()
     
@@ -24,12 +24,12 @@ final class RickAndMortyTests: XCTestCase {
     
     func testFetchCharacters_Success_ShouldLoadCharacters() async {
         let mockService = MockService()
-        let viewModel = FeedViewModel(service: mockService)
+        let sut = FeedViewModel(service: mockService)
         
         let expectation = XCTestExpectation(description: "State deveria ser .loaded")
         var receivedStates: [FeedViewControllerStates] = []
         
-        viewModel.statePublisher
+        sut.statePublisher
             .sink { state in
                 receivedStates.append(state)
                 if state == .loaded {
@@ -37,22 +37,22 @@ final class RickAndMortyTests: XCTestCase {
                 }
             }.store(in: &cancellables)
         
-        viewModel.fetchCharacters()
-        await fulfillment(of: [expectation], timeout: 1.0)
+        sut.fetchCharacters()
+        await fulfillment(of: [expectation], timeout: 0.01)
         
         XCTAssertEqual(receivedStates.last, .loaded)
-        XCTAssertEqual(viewModel.numberOfItems(), 2)
+        XCTAssertEqual(sut.numberOfItems(), 2)
     }
     
     func testFetchCharacters_Failure_ShouldEmitError() async {
         let mockService = MockService()
         mockService.isSuccess = false
-        let viewModel = FeedViewModel(service: mockService)
+        let sut = FeedViewModel(service: mockService)
         
         let expectation = XCTestExpectation(description: "State deveria ser .error")
         var receivedStates: [FeedViewControllerStates] = []
         
-        viewModel.statePublisher
+        sut.statePublisher
             .sink { state in
                 receivedStates.append(state)
                 if state == .error {
@@ -60,21 +60,21 @@ final class RickAndMortyTests: XCTestCase {
                 }
             }.store(in: &cancellables)
         
-        viewModel.fetchCharacters()
-        await fulfillment(of: [expectation], timeout: 1.0)
+        sut.fetchCharacters()
+        await fulfillment(of: [expectation], timeout: 0.01)
         
         XCTAssertEqual(receivedStates.last, .error)
-        XCTAssertEqual(viewModel.numberOfItems(), 0)
+        XCTAssertEqual(sut.numberOfItems(), 0)
     }
     
     func testSearchBarTextDidChange_ShouldFilterCharacters() async {
         let mockService = MockService()
-        let viewModel = FeedViewModel(service: mockService)
+        let sut = FeedViewModel(service: mockService)
         
         let expectation = XCTestExpectation(description: "State deveria ser .loaded")
         var receivedStates: [FeedViewControllerStates] = []
         
-        viewModel.statePublisher
+        sut.statePublisher
             .sink { state in
                 receivedStates.append(state)
                 if state == .loaded {
@@ -82,34 +82,34 @@ final class RickAndMortyTests: XCTestCase {
                 }
             }.store(in: &cancellables)
         
-        viewModel.fetchCharacters()
-        await fulfillment(of: [expectation], timeout: 1.0)
+        sut.fetchCharacters()
+        await fulfillment(of: [expectation], timeout: 0.01)
         
         // Confirmando estado inicial
-        XCTAssertEqual(viewModel.numberOfItems(), 2)
+        XCTAssertEqual(sut.numberOfItems(), 2)
         
-        let name = viewModel.character(at: IndexPath(row: 1, section: 0)).name
+        let name = sut.character(at: IndexPath(row: 1, section: 0)).name
         XCTAssertEqual(name, "Morty Smith")
         
         // Filtrar por Rick
-        viewModel.searchBarTextDidChange(searchText: "Rick")
-        XCTAssertEqual(viewModel.numberOfItems(), 1)
-        XCTAssertEqual(viewModel.currentCharacters().first?.name, "Rick Sanchez")
+        sut.searchBarTextDidChange(searchText: "Rick")
+        XCTAssertEqual(sut.numberOfItems(), 1)
+        XCTAssertEqual(sut.currentCharacters().first?.name, "Rick Sanchez")
         
         // Filtrar por status
-        viewModel.searchBarTextDidChange(searchText: "dead")
-        XCTAssertEqual(viewModel.numberOfItems(), 0)
+        sut.searchBarTextDidChange(searchText: "dead")
+        XCTAssertEqual(sut.numberOfItems(), 0)
     }
     
     func testPagination_ShouldRespectHasMorePages() async {
         let mockService = MockService()
         mockService.shouldReturnEmpty = true // Simula que não há mais páginas
-        let viewModel = FeedViewModel(service: mockService)
+        let sut = FeedViewModel(service: mockService)
         
         let expectation = XCTestExpectation(description: "State deveria ser .loaded")
         var receivedStates: [FeedViewControllerStates] = []
         
-        viewModel.statePublisher
+        sut.statePublisher
             .sink { state in
                 receivedStates.append(state)
                 if state == .loaded {
@@ -117,12 +117,12 @@ final class RickAndMortyTests: XCTestCase {
                 }
             }.store(in: &cancellables)
         
-        viewModel.fetchCharacters()
-        await fulfillment(of: [expectation], timeout: 1.0)
+        sut.fetchCharacters()
+        await fulfillment(of: [expectation], timeout: 0.01)
         
-        XCTAssertEqual(viewModel.numberOfItems(), 0)
+        XCTAssertEqual(sut.numberOfItems(), 0)
         
-        viewModel.fetchCharacters()
-        XCTAssertEqual(viewModel.numberOfItems(), 0)
+        sut.fetchCharacters()
+        XCTAssertEqual(sut.numberOfItems(), 0)
     }
 }
