@@ -34,7 +34,7 @@ class MockService: ServiceProtocol {
             ]
             return episodes
         } else {
-            return []
+            throw URLError(.badServerResponse)
         }
     }
     
