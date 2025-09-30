@@ -13,6 +13,7 @@ class MockService: ServiceProtocol {
     
     var isSuccess: Bool = true
     var shouldReturnEmpty: Bool = false
+    var shouldReturnMatchingResidents = false
     
     func getCharacters(page: Int) async throws -> CharsPage {
         if isSuccess {
@@ -30,7 +31,7 @@ class MockService: ServiceProtocol {
         if isSuccess {
             let episodes: [Episode] = [
                 Episode(id: 1, name: "Pilot", airDate: "", episode: "", characters: [], url: "", created: ""),
-                Episode(id: 2, name: "CoPilot", airDate: "", episode: "", characters: [], url: "", created: ""),
+                Episode(id: 2, name: "CoPilot", airDate: "", episode: "", characters: [], url: "", created: "")
             ]
             return episodes
         } else {
@@ -38,7 +39,36 @@ class MockService: ServiceProtocol {
         }
     }
     
-    func getMultipleCharacters(ids: [Int]) async throws -> [Char] { return [] }
-    func getLocations(page: Int) async throws -> LocationsPage { return LocationsPage(locations: [], hasMorePages: false) }
+    func getLocations(page: Int) async throws -> LocationsPage {
+        if isSuccess {
+            let locations: [Location]
+
+            if shouldReturnEmpty {
+                locations = []
+            } else if shouldReturnMatchingResidents {
+                locations = [
+                    Location(id: 1, name: "Earth", type: "Planet", dimension: "", residents: ["https://rickandmortyapi.com/api/character/1"], url: "", created: "")
+                ]
+            } else {
+                locations = [
+                    Location(id: 1, name: "Earth", type: "Planet", dimension: "", residents: [], url: "", created: ""),
+                    Location(id: 2, name: "Mars", type: "Planet", dimension: "", residents: [], url: "", created: "")
+                ]
+            }
+            return LocationsPage(locations: locations, hasMorePages: !shouldReturnEmpty)
+        } else {
+            throw URLError(.badServerResponse)
+        }
+    }
+    
+    func getMultipleCharacters(ids: [Int]) async throws -> [Char] {
+        if shouldReturnMatchingResidents {
+            return [
+                Char(id: 1, name: "Rick Sanchez", status: "Alive", species: "", type: "", gender: "", origin: CharLocation(name: "", url: ""), location: CharLocation(name: "", url: ""), image: "", episodes: [], url: "", created: "")
+            ]
+        }
+        return []
+    }
+    
     func getEpisodes(page: Int) async throws -> EpisodesPage { return EpisodesPage(episodes: [], hasMorePages: false) }
 }
