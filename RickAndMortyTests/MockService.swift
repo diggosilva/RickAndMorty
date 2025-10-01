@@ -70,5 +70,15 @@ class MockService: ServiceProtocol {
         return []
     }
     
-    func getEpisodes(page: Int) async throws -> EpisodesPage { return EpisodesPage(episodes: [], hasMorePages: false) }
+    func getEpisodes(page: Int) async throws -> EpisodesPage {
+        if isSuccess {
+            let episodes: [Episode] = [
+                Episode(id: 1, name: "Pilot", airDate: "", episode: "", characters: [], url: "", created: ""),
+                Episode(id: 2, name: "CoPilot", airDate: "", episode: "", characters: [], url: "", created: "")
+            ]
+             return EpisodesPage(episodes: episodes, hasMorePages: !shouldReturnEmpty)
+        } else {
+            throw URLError(.badServerResponse)
+        }
+    }
 }
