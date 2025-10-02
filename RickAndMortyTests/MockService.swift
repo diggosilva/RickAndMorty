@@ -62,12 +62,15 @@ class MockService: ServiceProtocol {
     }
     
     func getMultipleCharacters(ids: [Int]) async throws -> [Char] {
-        if shouldReturnMatchingResidents {
-            return [
-                Char(id: 1, name: "Rick Sanchez", status: "Alive", species: "", type: "", gender: "", origin: CharLocation(name: "", url: ""), location: CharLocation(name: "", url: ""), image: "", episodes: [], url: "", created: "")
+        if isSuccess {
+            let chars: [Char] = [
+                Char(id: 1, name: "Rick Sanchez", status: "Alive", species: "", type: "", gender: "", origin: CharLocation(name: "", url: ""), location: CharLocation(name: "", url: ""), image: "", episodes: [], url: "", created: ""),
+                Char(id: 2, name: "Morty Smith", status: "Alive", species: "", type: "", gender: "", origin: CharLocation(name: "", url: ""), location: CharLocation(name: "", url: ""), image: "", episodes: [], url: "", created: "")
             ]
+            return chars
+        } else {
+            throw URLError(.badServerResponse)
         }
-        return []
     }
     
     func getEpisodes(page: Int) async throws -> EpisodesPage {
