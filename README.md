@@ -11,9 +11,9 @@
 
 A Swift iOS Rick And Morty app. An application built solely for study purposes. The app brings a Rick and Morty data.
 
-| Demo | Details | List |
+| Feed | Details | List |
 | --- | --- | --- |
-|  |  |  |
+| ![Feed](https://github.com/user-attachments/assets/261e0bb3-8ec6-4625-b31d-0b77bb9ae9f2) | ![Details](https://github.com/user-attachments/assets/b9ee8e7b-0fad-4746-96f9-ccb28c62df33) | ![List](https://github.com/user-attachments/assets/44a6c581-a923-42dc-bc8b-00f4f2331f83) |
 
 ## Contents
 
